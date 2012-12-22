@@ -1,7 +1,7 @@
 <?php
 require_once("$srcdir/formatting.inc.php");
 
-class fee_sheet_option implements \JsonSerializable
+class fee_sheet_option
 {
     function __construct($c,$ct,$desc,$price,$category)
     {
@@ -11,23 +11,13 @@ class fee_sheet_option implements \JsonSerializable
         $this->price=$price;
         $this->category=$category;
     }
-    protected $code;    
-    protected $code_type;
-    protected $description;
-    protected $price;
-    protected $fee_display;
-    protected $category;
+    public $code;    
+    public $code_type;
+    public $description;
+    public $price;
+    public $fee_display;
+    public $category;
 
-    public function jsonSerialize()
-    {
-        $json_array=array();
-        $json_array['code']=$this->code;
-        $json_array['code_type']=$this->code_type;
-        $json_array['description']=$this->description;
-        $json_array['price']=oeFormatMoney($this->price);
-        $json_array['category']=$this->category;
-        return $json_array;
-    }
 }
 
 function load_fee_sheet_options($db)

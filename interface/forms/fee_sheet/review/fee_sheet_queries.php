@@ -1,6 +1,6 @@
 <?php
 require_once("$srcdir/formatting.inc.php");
-class code_info implements \JsonSerializable
+class code_info
 {
     function __construct($c,$ct,$desc,$selected=true)
     {
@@ -9,25 +9,16 @@ class code_info implements \JsonSerializable
         $this->description=$desc;
         $this->selected=$selected;
     }
-    protected $code;    
-    protected $code_type;
-    protected $description;
-    protected $selected;
+    public $code;    
+    public $code_type;
+    public $description;
+    public $selected;
 
     public function getKey()
     {
         return $this->code_type."|".$this->code;
     }
-    public function jsonSerialize()
-    {
-        $json_array=array();
-        $json_array['code']=$this->code;
-        $json_array['code_type']=$this->code_type;
-        $json_array['description']=$this->description;
-        $json_array['selected']=$this->selected;
-        return $json_array;
-    }
-    
+
     public function test()
     {
         error_log($this->code.":".$this->code_type.":".$this->description);
@@ -49,10 +40,10 @@ class procedure extends code_info
         $this->units=$units;
         $this->mod_size=$mod_size;
     }
-    protected $fee;
-    protected $justify;
-    protected $modifiers;
-    protected $units;
+    public $fee;
+    public $justify;
+    public $modifiers;
+    public $units;
 
     //modifier, units, fee, justify
     
@@ -60,20 +51,10 @@ class procedure extends code_info
     {
         array_push($params,$this->modifiers,$this->units,$this->fee,$this->justify);
     }
-    public function jsonSerialize()
-    {
-        $json_array=parent::jsonSerialize();
-        $json_array['fee']=oeFormatMoney($this->fee);
-        $json_array['justify']=$this->justify;
-        $json_array['modifiers']=$this->modifiers;
-        $json_array['units']=$this->units;
-        $json_array['mod_size']=$this->mod_size;
-        return $json_array;
-    }    
     
 }
 
-class encounter_info implements \JsonSerializable
+class encounter_info
 {
     function __construct($id,$date)
     {
@@ -81,17 +62,13 @@ class encounter_info implements \JsonSerializable
         $this->date=$date;
     }
     
+    public $id;
+    public $date;
+    
     function getID()
     {
         return $this->id;
     }
-    public function jsonSerialize()
-    {
-        $json_array=array();
-        $json_array['id']=$this->id;
-        $json_array['date']=$this->date;
-        return $json_array;
-    }    
 }
 function create_diags($dbi,$req_pid,$req_encounter,$diags)
 {
