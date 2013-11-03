@@ -276,7 +276,7 @@ $lists = array();
 
             if ($key == 'app_done' ) 
             { 
-                echo xl_layout_label('').":";
+                echo xl_layout_label('Appointment Done').":";
             }
 
             if ($key == 'follow_date' ) 
