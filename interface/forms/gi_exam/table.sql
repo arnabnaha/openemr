@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `form_giexam` (
     abd_vnhum varchar(255),
     abd_epigast varchar(255),
     PRIMARY KEY (id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 INSERT IGNORE INTO list_options SET list_id='lists',
     option_id='present_absent',
     title='Present Absent';
