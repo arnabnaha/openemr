@@ -20,15 +20,19 @@ $form_name = 'GI Examination';
 $form_folder = 'gi_exam';
 
 /* Check the access control lists to ensure permissions to this page */
-$thisauth = acl_check('patients', 'med');
-if (!$thisauth) {
- die($form_name.': Access Denied.');
+if (!acl_check('patients', 'med')) {
+ die(text($form_name).': '.xlt("Access Denied"));
 }
+$thisauth_write_addonly=FALSE;
+if ( acl_check('patients','med','',array('write','addonly') )) {
+ $thisauth_write_addonly=TRUE;
+}
+
 /* perform a squad check for pages touching patients, if we're in 'athletic team' mode */
 if ($GLOBALS['athletic_team']!='false') {
   $tmp = getPatientData($pid, 'squad');
   if ($tmp['squad'] && ! acl_check('squads', $tmp['squad']))
-   $thisauth = 0;
+   die(text($form_name).': '.xlt("Access Denied"));
 }
 /* Use the formFetch function from api.inc to load the saved record */
 $xyzzy = formFetch($table_name, $_GET['id']);
@@ -345,7 +349,7 @@ function PrintForm() {
 <div id="title">
 <span class="title"><?php xl($form_name,'e'); ?></span>
 <?php
- if ($thisauth == 'write' || $thisauth == 'addonly')
+ if ($thisauth_write_addonly)
   { ?>
 <a href="<?php echo $returnurl; ?>" onclick="top.restoreSession()">
 <span class="back"><?php xl($tmore,'e'); ?></span>
@@ -369,7 +373,7 @@ function PrintForm() {
 <tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Peristalsis','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_peris'], $xyzzy['abd_peris']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Any obvious lump','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_lump'], $xyzzy['abd_lump']); ?></td></tr>
 <tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Parotid Swelling','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_parotid'], $xyzzy['abd_parotid']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Any Spider naevi','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_spider'], $xyzzy['abd_spider']); ?></td></tr>
 <tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Hernial sites','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_hernia'], $xyzzy['abd_hernia']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Body hairs and Pubic Hair','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_hair'], $xyzzy['abd_hair']); ?></td></tr>
-<tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('UGenetalia','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_genetalia'], $xyzzy['abd_genetalia']); ?></td><!-- called consumeRows 214--> <!-- Exiting not($fields)2--><td class='emptycell' colspan='1'></td></tr>
+<tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Genetalia','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_genetalia'], $xyzzy['abd_genetalia']); ?></td><!-- called consumeRows 214--> <!-- Exiting not($fields)2--><td class='emptycell' colspan='1'></td></tr>
 <tr><td class='sectionlabel'>Palpation</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Superficial temperature','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_temp'], $xyzzy['abd_temp']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Superficial Tenderness','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_tender'], $xyzzy['abd_tender']); ?></td></tr>
 <tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Venous flow','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_vflow'], $xyzzy['abd_vflow']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Feel of Abdomen','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_feel'], $xyzzy['abd_feel']); ?></td></tr>
 <tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Localised Lump','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_loclump'], $xyzzy['abd_loclump']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Abdominal Girth','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['abd_girth'], $xyzzy['abd_girth']); ?></td></tr>

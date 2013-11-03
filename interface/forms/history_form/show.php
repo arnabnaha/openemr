@@ -20,15 +20,19 @@ $form_name = 'History Form';
 $form_folder = 'history_form';
 
 /* Check the access control lists to ensure permissions to this page */
-$thisauth = acl_check('patients', 'med');
-if (!$thisauth) {
- die($form_name.': Access Denied.');
+if (!acl_check('patients', 'med')) {
+ die(text($form_name).': '.xlt("Access Denied"));
 }
+$thisauth_write_addonly=FALSE;
+if ( acl_check('patients','med','',array('write','addonly') )) {
+ $thisauth_write_addonly=TRUE;
+}
+
 /* perform a squad check for pages touching patients, if we're in 'athletic team' mode */
 if ($GLOBALS['athletic_team']!='false') {
   $tmp = getPatientData($pid, 'squad');
   if ($tmp['squad'] && ! acl_check('squads', $tmp['squad']))
-   $thisauth = 0;
+   die(text($form_name).': '.xlt("Access Denied"));
 }
 /* Use the formFetch function from api.inc to load the saved record */
 $xyzzy = formFetch($table_name, $_GET['id']);
@@ -226,7 +230,7 @@ function PrintForm() {
 <div id="title">
 <span class="title"><?php xl($form_name,'e'); ?></span>
 <?php
- if ($thisauth == 'write' || $thisauth == 'addonly')
+ if ($thisauth_write_addonly)
   { ?>
 <a href="<?php echo $returnurl; ?>" onclick="top.restoreSession()">
 <span class="back"><?php xl($tmore,'e'); ?></span>
@@ -253,7 +257,7 @@ function PrintForm() {
 <tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Bladder Habit','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['bladder_habit'], $xyzzy['bladder_habit']); ?></td><!-- called consumeRows 214--> <!-- Exiting not($fields)2--><td class='emptycell' colspan='1'></td></tr>
 <tr><td class='sectionlabel'>Other History</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Family History','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['fam_his'], $xyzzy['fam_his']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Socioeconomic History','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['soc_his'], $xyzzy['soc_his']); ?></td></tr>
 <tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Treatment History','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['trt_his'], $xyzzy['trt_his']); ?></td><!-- called consumeRows 214--> <!-- Exiting not($fields)2--><td class='emptycell' colspan='1'></td></tr>
-<tr><td class='sectionlabel'>Miscellaneous</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Follow Up Needed','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['next_visit'], $xyzzy['next_visit']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['app_done'], $xyzzy['app_done']); ?></td></tr>
+<tr><td class='sectionlabel'>Miscellaneous</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Follow Up Needed','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['next_visit'], $xyzzy['next_visit']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Appointment Done','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['app_done'], $xyzzy['app_done']); ?></td></tr>
 <tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Follow up date','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['follow_date'], $xyzzy['follow_date']); ?></td><!-- called consumeRows 214--> <!-- Exiting not($fields)2--><td class='emptycell' colspan='1'></td></tr>
 </table>
 
