@@ -18,19 +18,23 @@ $form_name = 'Follow Up Form';
 $form_folder = 'followup_form';
 
 /* Check the access control lists to ensure permissions to this page */
-$thisauth = acl_check('patients', 'med');
-if (!$thisauth) {
- die($form_name.': Access Denied.');
+if (!acl_check('patients', 'med')) {
+ die(text($form_name).': '.xlt("Access Denied"));
 }
+$thisauth_write_addonly=FALSE;
+if ( acl_check('patients','med','',array('write','addonly') )) {
+ $thisauth_write_addonly=TRUE;
+}
+
 /* perform a squad check for pages touching patients, if we're in 'athletic team' mode */
 if ($GLOBALS['athletic_team']!='false') {
   $tmp = getPatientData($pid, 'squad');
   if ($tmp['squad'] && ! acl_check('squads', $tmp['squad']))
-   $thisauth = 0;
+   die(text($form_name).': '.xlt("Access Denied"));
 }
 
-if ($thisauth != 'write' && $thisauth != 'addonly')
-  die($form_name.': Adding is not authorized.');
+if (!$thisauth_write_addonly)
+  die(text($form_name).': '.xlt("Adding is not authorized"));
 /* in order to use the layout engine's draw functions, we need a fake table of layout data. */
 $manual_layouts = array( 
  'last_enc' => 

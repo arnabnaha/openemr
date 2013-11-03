@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `form_followup` (
     app_done varchar(255),
     app_date datetime default NULL,
     PRIMARY KEY (id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 INSERT IGNORE INTO list_options SET list_id='lists',
     option_id='reas_follow',
     title='Follow up Reasons';
