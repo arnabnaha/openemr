@@ -388,7 +388,7 @@ $lists = array();
 
             if ($key == 'abd_genetalia' ) 
             { 
-                echo xl_layout_label('UGenetalia').":";
+                echo xl_layout_label('Genetalia').":";
             }
 
             if ($key == 'abd_temp' ) 

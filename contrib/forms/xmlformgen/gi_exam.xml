@@ -23,7 +23,7 @@
 			<field name="abd_spider" label="Any Spider naevi" type="textfield" size="30" maxlength="255" hoverover="" labelcols="1" cols="1"/>
 			<field name="abd_hernia" label="Hernial sites" type="textfield" size="30" maxlength="255" hoverover="" labelcols="1" cols="1"/>
 			<field name="abd_hair" label="Body hairs and Pubic Hair" type="textfield" size="30" maxlength="255" hoverover="" labelcols="1" cols="1"/>
-			<field name="abd_genetalia" label="UGenetalia" type="textfield" size="30" maxlength="255" hoverover="" labelcols="1" cols="1"/>
+			<field name="abd_genetalia" label="Genetalia" type="textfield" size="30" maxlength="255" hoverover="" labelcols="1" cols="1"/>
 		</section>
 	
 		<section name="palpation" label="Palpation">

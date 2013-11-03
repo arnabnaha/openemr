@@ -18,19 +18,23 @@ $form_name = 'History Form';
 $form_folder = 'history_form';
 
 /* Check the access control lists to ensure permissions to this page */
-$thisauth = acl_check('patients', 'med');
-if (!$thisauth) {
- die($form_name.': Access Denied.');
+if (!acl_check('patients', 'med')) {
+ die(text($form_name).': '.xlt("Access Denied"));
 }
+$thisauth_write_addonly=FALSE;
+if ( acl_check('patients','med','',array('write','addonly') )) {
+ $thisauth_write_addonly=TRUE;
+}
+
 /* perform a squad check for pages touching patients, if we're in 'athletic team' mode */
 if ($GLOBALS['athletic_team']!='false') {
   $tmp = getPatientData($pid, 'squad');
   if ($tmp['squad'] && ! acl_check('squads', $tmp['squad']))
-   $thisauth = 0;
+   die(text($form_name).': '.xlt("Access Denied"));
 }
 
-if ($thisauth != 'write' && $thisauth != 'addonly')
-  die($form_name.': Adding is not authorized.');
+if (!$thisauth_write_addonly)
+  die(text($form_name).': '.xlt("Adding is not authorized"));
 /* in order to use the layout engine's draw functions, we need a fake table of layout data. */
 $manual_layouts = array( 
  'pt_name' => 
@@ -280,7 +284,7 @@ Calendar.setup({inputField:'date_visit', ifFormat:'%Y-%m-%d', button:'img_date_v
 </table></div>
 </td></tr> <!-- end section other_history -->
 <tr><td class='sectionlabel'><input type='checkbox' id='form_cb_m_5' value='1' data-section="misc" checked="checked" />Miscellaneous</td></tr><tr><td><div id="misc" class='section'><table>
-<!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!--  generating 4 cells and calling --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Follow Up Needed','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['next_visit'], ''); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['app_done'], ''); ?></td><!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
+<!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!--  generating 4 cells and calling --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Follow Up Needed','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['next_visit'], ''); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Appointment Done','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['app_done'], ''); ?></td><!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
 <!-- called consumeRows 014--> <!-- generating not($fields[$checked+1]) and calling last --><td>
 <span class="fieldlabel"><?php xl('Follow up date','e'); ?> (yyyy-mm-dd): </span>
 </td><td>
