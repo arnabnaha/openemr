@@ -31,5 +31,16 @@ CREATE TABLE IF NOT EXISTS `form_respexam` (
     breath_sound varchar(255),
     ad_sound varchar(255),
     PRIMARY KEY (id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
+INSERT IGNORE INTO list_options SET list_id='lists',
+    option_id='present_absent',
+    title='Present Absent';
+INSERT IGNORE INTO list_options SET list_id='present_absent',
+    option_id='1',
+    title='Present',
+    seq='1';
+INSERT IGNORE INTO list_options SET list_id='present_absent',
+    option_id='2',
+    title='Absent',
+    seq='2';
 
