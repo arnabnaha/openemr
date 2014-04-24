@@ -86,7 +86,7 @@ for($p=0;$p<count($db_patient);$p++)
 	$db_email_msg = cron_getNotificationData($TYPE);
 }
 
-sqlClose();
+//sqlClose();
 ?>
 
 <html>
