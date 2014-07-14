@@ -23,6 +23,6 @@ deleted tinyint(4) NOT NULL DEFAULT '0' COMMENT 'flag indicates form has been de
 ImgName varchar(255) NOT NULL,
 ImgType varchar(255) NOT NULL,
 PRIMARY KEY (id)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 
