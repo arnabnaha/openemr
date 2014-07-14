@@ -18,5 +18,5 @@ CREATE TABLE IF NOT EXISTS `form_communication` (
     screener int(11) default NULL,
     signature_box varchar(60),
     PRIMARY KEY (id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
