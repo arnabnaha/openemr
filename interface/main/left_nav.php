@@ -811,7 +811,7 @@ function clearactive() {
   str+='<option value="Past Encounter List"><?php echo htmlspecialchars( xl('Past Encounter List'), ENT_QUOTES) ?></option>';
   for(CountEncounter=0;CountEncounter<EncounterDateArray.length;CountEncounter++)
    {
-    str+='<option value="'+EncounterIdArray[CountEncounter]+'~'+EncounterDateArray[CountEncounter]+'">'+EncounterDateArray[CountEncounter]+'-'+CalendarCategoryArray[CountEncounter]+'</option>';
+    str+='<option value="'+EncounterIdArray[CountEncounter]+'~'+EncounterDateArray[CountEncounter]+'">'+EncounterDateArray[CountEncounter]+'-'+CalendarCategoryArray[CountEncounter]+' '+'('+EncounterIdArray[CountEncounter]+')'+'</option>';
    }
   str+='</Select>';
   $(parent.Title.document.getElementById('past_encounter_block')).show();
