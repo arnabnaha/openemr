@@ -3,7 +3,7 @@
 <form>
     <table type="form">form_gensurvey</table>
     <RealName>General Survey</RealName>
-    <safename>gensurvey_form</safename>
+    <safename>gensurvey</safename>
     <style cells_per_row="4">layout</style>
     <acl table="patients">med</acl>
 	
