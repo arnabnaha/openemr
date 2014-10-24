@@ -166,7 +166,26 @@ $manual_layouts = array(
           'data_type' => '4',
           'fld_length' => '0',
           'description' => '',
-          'list_id' => '' )
+          'list_id' => '' ),
+ 'ref_need' => 
+   array( 'field_id' => 'ref_need',
+          'data_type' => '1',
+          'fld_length' => '0',
+          'description' => '',
+          'list_id' => 'yesno' ),
+ 'ref_name' => 
+   array( 'field_id' => 'ref_name',
+          'data_type' => '2',
+          'fld_length' => '30',
+          'max_length' => '255',
+          'description' => '',
+          'list_id' => '' ),
+ 'ref_doc' => 
+   array( 'field_id' => 'ref_doc',
+          'data_type' => '1',
+          'fld_length' => '0',
+          'description' => '',
+          'list_id' => 'Referring_Speciality' )
  );
 $submiturl = $GLOBALS['rootdir'].'/forms/'.$form_folder.'/save.php?mode=new&amp;return=encounter';
 /* no get logic here */
@@ -285,7 +304,7 @@ Calendar.setup({inputField:'date_visit', ifFormat:'%Y-%m-%d', button:'img_date_v
 </td></tr> <!-- end section other_history -->
 <tr><td class='sectionlabel'><input type='checkbox' id='form_cb_m_5' value='1' data-section="misc" checked="checked" />Miscellaneous</td></tr><tr><td><div id="misc" class='section'><table>
 <!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!--  generating 4 cells and calling --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Follow Up Needed','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['next_visit'], ''); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Appointment Done','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['app_done'], ''); ?></td><!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
-<!-- called consumeRows 014--> <!-- generating not($fields[$checked+1]) and calling last --><td>
+<!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!--  generating 4 cells and calling --><td>
 <span class="fieldlabel"><?php xl('Follow up date','e'); ?> (yyyy-mm-dd): </span>
 </td><td>
    <input type='text' size='10' name='follow_date' id='follow_date'
@@ -299,7 +318,8 @@ Calendar.setup({inputField:'date_visit', ifFormat:'%Y-%m-%d', button:'img_date_v
 Calendar.setup({inputField:'follow_date', ifFormat:'%Y-%m-%d', button:'img_follow_date'});
 </script>
 </td>
-<!-- called consumeRows 214--> <!-- Exiting not($fields) and generating 2 empty fields --><td class='emptycell' colspan='1'></td></tr>
+<td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Referral Needed','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['ref_need'], ''); ?></td><!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
+<!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!-- generating not($fields[$checked+1]) and calling last --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Referred to','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['ref_name'], ''); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Referral Speciality','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['ref_doc'], ''); ?></td><!-- called consumeRows 424--> <!-- Exiting not($fields) and generating 0 empty fields --></tr>
 </table></div>
 </td></tr> <!-- end section misc -->
 </table>
