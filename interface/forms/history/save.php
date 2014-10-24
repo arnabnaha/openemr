@@ -38,9 +38,9 @@ if ($GLOBALS['athletic_team']!='false') {
 }
 
 /* an array of all of the fields' names and their types. */
-$field_names = array('pt_name' => 'textfield','date_visit' => 'date','pt_age' => 'textfield','pt_respo' => 'dropdown_list','pt_rel' => 'dropdown_list','pt_dem' => 'dropdown_list','ch_comp' => 'textarea','pr_his' => 'textarea','past_his' => 'textarea','sleep' => 'textfield','appetite' => 'textfield','addiction' => 'dropdown_list','bowel_habit' => 'textfield','bladder_habit' => 'textfield','fam_his' => 'checkbox_list','soc_his' => 'checkbox_list','trt_his' => 'textarea','next_visit' => 'dropdown_list','app_done' => 'dropdown_list','follow_date' => 'date');
+$field_names = array('pt_name' => 'textfield','date_visit' => 'date','pt_age' => 'textfield','pt_respo' => 'dropdown_list','pt_rel' => 'dropdown_list','pt_dem' => 'dropdown_list','ch_comp' => 'textarea','pr_his' => 'textarea','past_his' => 'textarea','sleep' => 'textfield','appetite' => 'textfield','addiction' => 'dropdown_list','bowel_habit' => 'textfield','bladder_habit' => 'textfield','fam_his' => 'checkbox_list','soc_his' => 'checkbox_list','trt_his' => 'textarea','next_visit' => 'dropdown_list','app_done' => 'dropdown_list','follow_date' => 'date','ref_need' => 'dropdown_list','ref_name' => 'textfield','ref_doc' => 'dropdown_list');
 /* an array of the lists the fields may draw on. */
-$lists = array('pt_respo' => 'Respondent', 'pt_rel' => 'Relationship_list', 'pt_dem' => 'yesno', 'addiction' => 'addiction_status', 'fam_his' => 'hist_take', 'soc_his' => 'hist_take', 'next_visit' => 'yesno', 'app_done' => 'yesno');
+$lists = array('pt_respo' => 'Respondent', 'pt_rel' => 'Relationship_list', 'pt_dem' => 'yesno', 'addiction' => 'addiction_status', 'fam_his' => 'hist_take', 'soc_his' => 'hist_take', 'next_visit' => 'yesno', 'app_done' => 'yesno', 'ref_need' => 'yesno', 'ref_doc' => 'Referring_Speciality');
 
 /* get each field from $_POST[], storing them into $field_names associated with their names. */
 foreach($field_names as $key=>$val)
