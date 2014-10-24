@@ -17,7 +17,7 @@ $table_name = 'form_history';
 
 
 /* an array of all of the fields' names and their types. */
-$field_names = array('pt_name' => 'textfield','date_visit' => 'date','pt_age' => 'textfield','pt_respo' => 'dropdown_list','pt_rel' => 'dropdown_list','pt_dem' => 'dropdown_list','ch_comp' => 'textarea','pr_his' => 'textarea','past_his' => 'textarea','sleep' => 'textfield','appetite' => 'textfield','addiction' => 'dropdown_list','bowel_habit' => 'textfield','bladder_habit' => 'textfield','fam_his' => 'checkbox_list','soc_his' => 'checkbox_list','trt_his' => 'textarea','next_visit' => 'dropdown_list','app_done' => 'dropdown_list','follow_date' => 'date');/* in order to use the layout engine's draw functions, we need a fake table of layout data. */
+$field_names = array('pt_name' => 'textfield','date_visit' => 'date','pt_age' => 'textfield','pt_respo' => 'dropdown_list','pt_rel' => 'dropdown_list','pt_dem' => 'dropdown_list','ch_comp' => 'textarea','pr_his' => 'textarea','past_his' => 'textarea','sleep' => 'textfield','appetite' => 'textfield','addiction' => 'dropdown_list','bowel_habit' => 'textfield','bladder_habit' => 'textfield','fam_his' => 'checkbox_list','soc_his' => 'checkbox_list','trt_his' => 'textarea','next_visit' => 'dropdown_list','app_done' => 'dropdown_list','follow_date' => 'date','ref_need' => 'dropdown_list','ref_name' => 'textfield','ref_doc' => 'dropdown_list');/* in order to use the layout engine's draw functions, we need a fake table of layout data. */
 $manual_layouts = array( 
  'pt_name' => 
    array( 'field_id' => 'pt_name',
@@ -148,7 +148,26 @@ $manual_layouts = array(
           'data_type' => '4',
           'fld_length' => '0',
           'description' => '',
-          'list_id' => '' )
+          'list_id' => '' ),
+ 'ref_need' => 
+   array( 'field_id' => 'ref_need',
+          'data_type' => '1',
+          'fld_length' => '0',
+          'description' => '',
+          'list_id' => 'yesno' ),
+ 'ref_name' => 
+   array( 'field_id' => 'ref_name',
+          'data_type' => '2',
+          'fld_length' => '30',
+          'max_length' => '255',
+          'description' => '',
+          'list_id' => '' ),
+ 'ref_doc' => 
+   array( 'field_id' => 'ref_doc',
+          'data_type' => '1',
+          'fld_length' => '0',
+          'description' => '',
+          'list_id' => 'Referring_Speciality' )
  );
 /* an array of the lists the fields may draw on. */
 $lists = array();
@@ -282,6 +301,21 @@ $lists = array();
             if ($key == 'follow_date' ) 
             { 
                 echo xl_layout_label('Follow up date').":";
+            }
+
+            if ($key == 'ref_need' ) 
+            { 
+                echo xl_layout_label('Referral Needed').":";
+            }
+
+            if ($key == 'ref_name' ) 
+            { 
+                echo xl_layout_label('Referred to').":";
+            }
+
+            if ($key == 'ref_doc' ) 
+            { 
+                echo xl_layout_label('Referral Speciality').":";
             }
 
                 echo '</span><span class=text>'.generate_display_field( $manual_layouts[$key], $value ).'</span></td>';

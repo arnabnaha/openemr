@@ -168,7 +168,26 @@ $manual_layouts = array(
           'data_type' => '4',
           'fld_length' => '0',
           'description' => '',
-          'list_id' => '' )
+          'list_id' => '' ),
+ 'ref_need' => 
+   array( 'field_id' => 'ref_need',
+          'data_type' => '1',
+          'fld_length' => '0',
+          'description' => '',
+          'list_id' => 'yesno' ),
+ 'ref_name' => 
+   array( 'field_id' => 'ref_name',
+          'data_type' => '2',
+          'fld_length' => '30',
+          'max_length' => '255',
+          'description' => '',
+          'list_id' => '' ),
+ 'ref_doc' => 
+   array( 'field_id' => 'ref_doc',
+          'data_type' => '1',
+          'fld_length' => '0',
+          'description' => '',
+          'list_id' => 'Referring_Speciality' )
  );
 
 /* since we have no-where to return, abuse returnurl to link to the 'edit' page */
@@ -258,7 +277,8 @@ function PrintForm() {
 <tr><td class='sectionlabel'>Other History</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Family History','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['fam_his'], $xyzzy['fam_his']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Socioeconomic History','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['soc_his'], $xyzzy['soc_his']); ?></td></tr>
 <tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Treatment History','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['trt_his'], $xyzzy['trt_his']); ?></td><!-- called consumeRows 214--> <!-- Exiting not($fields)2--><td class='emptycell' colspan='1'></td></tr>
 <tr><td class='sectionlabel'>Miscellaneous</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Follow Up Needed','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['next_visit'], $xyzzy['next_visit']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Appointment Done','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['app_done'], $xyzzy['app_done']); ?></td></tr>
-<tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Follow up date','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['follow_date'], $xyzzy['follow_date']); ?></td><!-- called consumeRows 214--> <!-- Exiting not($fields)2--><td class='emptycell' colspan='1'></td></tr>
+<tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Follow up date','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['follow_date'], $xyzzy['follow_date']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Referral Needed','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['ref_need'], $xyzzy['ref_need']); ?></td></tr>
+<tr><td valign='top'>&nbsp;</td><!-- called consumeRows 014--> <!-- called consumeRows 224--> <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Referred to','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['ref_name'], $xyzzy['ref_name']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Referral Speciality','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_display_field($manual_layouts['ref_doc'], $xyzzy['ref_doc']); ?></td><!-- called consumeRows 424--> <!-- Exiting not($fields)0--></tr>
 </table>
 
 
