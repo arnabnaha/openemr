@@ -41,6 +41,9 @@
 		    <field name="next_visit" label="Follow Up Needed" type="dropdown_list" size="20" list="yesno" hoverover="" maxlength="255" labelcols="1" cols="1"/>
 			<field name="app_done" label="Appointment Done" type="dropdown_list" size="20" list="yesno" hoverover="" maxlength="255" labelcols="1" cols="1"/>
 			<field name="follow_date" label="Follow up date" type="date" labelcols="1" cols="1"/>
+			<field name="ref_need" label="Referral Needed" type="dropdown_list" size="20" list="yesno" hoverover="" maxlength="255" labelcols="1" cols="1"/>
+			<field name="ref_name" label="Referred to" type="textfield" size="30" maxlength="255" hoverover="" labelcols="1" cols="1"/>
+			<field name="ref_doc" label="Referral Speciality" type="dropdown_list" size="20" list="Referring_Speciality" hoverover="" maxlength="255" labelcols="1" cols="1"/>
 		</section>
 		
 	</manual>
@@ -82,6 +85,37 @@
 		<listitem id='9' label="Aunt" order='9'>Aunt</listitem>
 	</list>
 		
+	<list name="Referring_Speciality" label="Referring Speciality" type="standard" id="Referring_Speciality" import="yes">
+		<listitem id='1' label="Waiting for drug response/patient response" order='1'>Waiting for drug response/patient response</listitem>
+		<listitem id='2' label="Refer on next visit" order='2'>Refer on next visit</listitem>
+		<listitem id='3' label="Cardiologist" order='3'>Cardiologist</listitem>
+		<listitem id='4' label="Medicine" order='4'>Medicine</listitem>
+		<listitem id='5' label="Surgeon" order='5'>Surgeon</listitem>
+		<listitem id='6' label="Psychiatrist" order='6'>Psychiatrist</listitem>
+		<listitem id='7' label="Gastro Enterologistr" order='7'>Gastro Enterologist</listitem>
+		<listitem id='8' label="Endocrinologist" order='8'>Endocrinologist</listitem>
+		<listitem id='9' label="Diabetician" order='9'>Diabetician</listitem>
+		<listitem id='10' label="Neurologist" order='10'>Neurologist</listitem>
+		<listitem id='11' label="Dermatologist" order='11'>Dermatologist</listitem>
+		<listitem id='12' label="Cardio Thoracic Vascular Surgeon" order='12'>Cardio Thoracic Vascular Surgeon</listitem>
+		<listitem id='13' label="Paediatrician" order='13'>Paediatrician</listitem>
+		<listitem id='14' label="Paediatric Surgeon" order='14'>Paediatric Surgeon</listitem>
+		<listitem id='15' label="Gynaecologist" order='15'>Gynaecologist</listitem>
+		<listitem id='16' label="Neurootologist" order='16'>Neurootologist</listitem>
+		<listitem id='17' label="ENT Speacialist" order='17'>ENT Specialist</listitem>
+		<listitem id='18' label="Ophthalmologist" order='18'>Ophthalmologist</listitem>
+		<listitem id='19' label="Dietician" order='19'>Dietician</listitem>
+		<listitem id='20' label="Orthpaedic Surgeon" order='20'>Orthopaedic Surgeon</listitem>
+		<listitem id='21' label="Physiotherapist" order='21'>Physiotherapist</listitem>
+		<listitem id='22' label="Oncologist" order='22'>Oncologist</listitem>
+		<listitem id='23' label="Onco Surgeon" order='23'>Onco Surgeon</listitem>
+		<listitem id='24' label="Neuro Surgeon" order='24'>Neuro Surgeon</listitem>
+		<listitem id='25' label="Gastro Surgeon" order='25'>Gastro Surgeon</listitem>
+		<listitem id='26' label="Plastic Surgeon" order='26'>Plastic Surgeon</listitem>
+		<listitem id='27' label="Physical Medicine and Rehabilitation" order='27'>Physical Medicine and Rehabilitation</listitem>
+		<listitem id='28' label="Speech Therapist" order='28'>Speech Therapist</listitem>
+	</list>
+	
 	<list name="yesno" label="Yes/No" type="standard" id="yesno" import="no"/>
 </form>
 
