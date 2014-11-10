@@ -639,7 +639,7 @@ foreach ($ar as $key => $val) {
         } elseif ($val == "billing") {
 
             echo "<hr />";
-            echo "<div class='text billing'>";
+            echo "<div>";
             print "<h1>".xl('Billing Information').":</h1>";
             if (count($ar['newpatient']) > 0) {
                 $billings = array();
@@ -956,7 +956,7 @@ foreach ($ar as $key => $val) {
                     echo "<h1>" . xl($formres["form_name"]) . "</h1>";
                 }
                 else {
-                    echo "<div class='text encounter_form'>";
+                    echo "<div>";
                     echo "<h1>" . xl_form_title($formres["form_name"]) . "</h1>";
                 }
 
