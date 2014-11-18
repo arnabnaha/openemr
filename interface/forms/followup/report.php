@@ -212,7 +212,7 @@ $lists = array();
                 echo xl_layout_label('Next Visit Date').":";
             }
 
-                echo '</span><span class=text>'.generate_display_field( $manual_layouts[$key], $value ).'</span></td>';
+                echo '<br></span><span class=text>'.generate_display_field( $manual_layouts[$key], wordwrap($value, 35, "\n", true) ).'</span></td>';
 
             $count++;
             if ($count == $cols) {
