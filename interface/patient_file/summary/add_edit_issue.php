@@ -14,6 +14,11 @@
  * @link    http://www.open-emr.org
  */
 
+// This is a modified (DRAFT) version of this file
+//
+// This is DRAFT 2
+
+
 //SANITIZE ALL ESCAPES
 $sanitize_all_escapes=true;
 //
@@ -527,10 +532,75 @@ function divclick(cb, divid) {
   </td>
  </tr>
 
+
+
+
+<?php /////////////////////////////////////////////
+
+if ($irow['type']=="medication") {
+
+    echo '<script>';
+    echo 'function thisFun2() {';
+    echo 'var x2 = document.getElementById("codeSelect2").value;';
+    echo 'document.getElementById("codeSelect2").selectedIndex = -1;';
+    echo 'var x6 = document.getElementById("diagBox").value;';
+    echo 'if (x6.length > 0) x6 += ";";';
+    echo 'x6 += x2;';
+    echo 'document.getElementById("diagBox").value = x6;';
+    echo '}';
+    echo '</script>';
+
+    echo '<tr>';
+    echo '<td><b>Active Issue Codes</b></td>';
+    echo '<td>';
+
+$codeList2 = array();
+/////
+    $issueCodes2 = sqlStatement("SELECT diagnosis FROM lists WHERE pid = ? AND enddate is NULL", array($thispid));
+
+    echo '<select size="4" id="codeSelect2" onchange="thisFun2()" style="max-width:100%;">';
+
+    while ($issueCodesRow2 = sqlFetchArray($issueCodes2)) {
+
+        if ($issueCodesRow2['diagnosis'] != "") {
+
+            $diags2 = explode(";", $issueCodesRow2['diagnosis']);
+            $codeList2=array_merge($codeList2, $diags2);
+        }
+    }
+///////
+    if ($codeList2) {
+
+    $codeList2=array_unique($codeList2);
+    sort($codeList2);
+
+    foreach ($codeList2 as $diag2) {      
+        $codedesc2 = lookup_code_descriptions($diag2);
+        $codetext2 = '<option title="' . '(' . $codedesc2 . ')"' . ' value="' . $diag2 . '">' . $diag2 . " (" . $codedesc2 . ")" . "</option>";
+        echo $codetext2;
+    }
+    } else {
+        echo '<option>(No Results Found)</option>';
+    }
+    
+    
+    echo "</select>";
+    echo "</td>";
+    echo "</tr>";
+}    
+///////////////////////////////////////////////////
+?>
+
+
+
+
+
+
+
  <tr id='row_diagnosis'>
   <td valign='top' nowrap><b><?php echo xlt('Coding'); ?>:</b></td>
   <td>
-   <input type='text' size='50' name='form_diagnosis'
+   <input type='text' size='50' name='form_diagnosis' id='diagBox'
     value='<?php echo attr($irow['diagnosis']) ?>' onclick='sel_diagnosis()'
     title='<?php echo xla('Click to select or change coding'); ?>'
     style='width:100%' readonly />
