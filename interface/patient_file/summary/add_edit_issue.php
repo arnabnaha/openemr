@@ -14,11 +14,6 @@
  * @link    http://www.open-emr.org
  */
 
-// This is a modified (DRAFT) version of this file
-//
-// This is DRAFT 2
-
-
 //SANITIZE ALL ESCAPES
 $sanitize_all_escapes=true;
 //
@@ -536,19 +531,22 @@ function divclick(cb, divid) {
 
 
 <?php /////////////////////////////////////////////
-
-if ($irow['type']=="medication") {
+              
+if ($thistype=="medication") {
 
     echo '<script>';
-    echo 'function thisFun2() {';
-    echo 'var x2 = document.getElementById("codeSelect2").value;';
-    echo 'document.getElementById("codeSelect2").selectedIndex = -1;';
-    echo 'var x6 = document.getElementById("diagBox").value;';
+    echo 'function codeBoxFuntion2() {';
+    echo 'var frm=document.forms[0];';
+    echo 'var x2 = frm.form_codeSelect2.options[frm.form_codeSelect2.selectedIndex].value;';
+    echo 'frm.form_codeSelect2.selectedIndex = -1;';
+ 
+    echo 'var x6 = frm.form_diagnosis.value;';
     echo 'if (x6.length > 0) x6 += ";";';
     echo 'x6 += x2;';
-    echo 'document.getElementById("diagBox").value = x6;';
+    echo 'frm.form_diagnosis.value = x6;';
     echo '}';
     echo '</script>';
+
 
     echo '<tr>';
     echo '<td><b>Active Issue Codes</b></td>';
@@ -558,7 +556,7 @@ $codeList2 = array();
 /////
     $issueCodes2 = sqlStatement("SELECT diagnosis FROM lists WHERE pid = ? AND enddate is NULL", array($thispid));
 
-    echo '<select size="4" id="codeSelect2" onchange="thisFun2()" style="max-width:100%;">';
+    echo '<select size="4" name="form_codeSelect2" onchange="codeBoxFuntion2()" style="max-width:100%;">';
 
     while ($issueCodesRow2 = sqlFetchArray($issueCodes2)) {
 
@@ -600,7 +598,7 @@ $codeList2 = array();
  <tr id='row_diagnosis'>
   <td valign='top' nowrap><b><?php echo xlt('Coding'); ?>:</b></td>
   <td>
-   <input type='text' size='50' name='form_diagnosis' id='diagBox'
+   <input type='text' size='50' name='form_diagnosis'
     value='<?php echo attr($irow['diagnosis']) ?>' onclick='sel_diagnosis()'
     title='<?php echo xla('Click to select or change coding'); ?>'
     style='width:100%' readonly />
