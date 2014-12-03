@@ -532,10 +532,10 @@ function divclick(cb, divid) {
 
 <?php /////////////////////////////////////////////
               
-if ($thistype=="medication") {
+if ($irow['type']=="medication") {
 
     echo '<script>';
-    echo 'function codeBoxFuntion2() {';
+    echo 'function codeBoxFunction2() {';
     echo 'var frm=document.forms[0];';
     echo 'var x2 = frm.form_codeSelect2.options[frm.form_codeSelect2.selectedIndex].value;';
     echo 'frm.form_codeSelect2.selectedIndex = -1;';
@@ -556,7 +556,7 @@ $codeList2 = array();
 /////
     $issueCodes2 = sqlStatement("SELECT diagnosis FROM lists WHERE pid = ? AND enddate is NULL", array($thispid));
 
-    echo '<select size="4" name="form_codeSelect2" onchange="codeBoxFuntion2()" style="max-width:100%;">';
+    echo '<select size="4" name="form_codeSelect2" onchange="codeBoxFunction2()" style="max-width:100%;">';
 
     while ($issueCodesRow2 = sqlFetchArray($issueCodes2)) {
 
