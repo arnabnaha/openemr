@@ -532,7 +532,24 @@ function divclick(cb, divid) {
 
 <?php /////////////////////////////////////////////
               
-if ($irow['type']=="medication") {
+if (($irow['type']=="medical_problem") || ($irow['type']=="medication") || ($irow['type']=="surgery")) {
+
+    if ($irow['type']=="medical_problem") {
+
+        $allowedCodes2=collect_codetypes("medical_problem");
+    }
+    elseif ($irow['type']=="medication") {
+
+        $allowedCodes2=collect_codetypes("diagnosis");
+    }
+
+    elseif ($irow['type']=="surgery") {
+
+       $allowedCodes2=collect_codetypes("diagnosis");
+    }
+
+
+
 
     echo '<script>';
     echo 'function codeBoxFunction2() {';
@@ -552,8 +569,8 @@ if ($irow['type']=="medication") {
     echo '<td><b>Active Issue Codes</b></td>';
     echo '<td>';
 
-$codeList2 = array();
-/////
+    $codeList2 = array();
+
     $issueCodes2 = sqlStatement("SELECT diagnosis FROM lists WHERE pid = ? AND enddate is NULL", array($thispid));
 
     echo '<select size="4" name="form_codeSelect2" onchange="codeBoxFunction2()" style="max-width:100%;">';
@@ -566,21 +583,44 @@ $codeList2 = array();
             $codeList2=array_merge($codeList2, $diags2);
         }
     }
-///////
+
     if ($codeList2) {
 
     $codeList2=array_unique($codeList2);
     sort($codeList2);
 
-    foreach ($codeList2 as $diag2) {      
+
+
+//////////
+    foreach ($codeList2 as $diag2) {
+    
+list($codeTyX, $theCode)=explode(":", $diag2);
+
+foreach ($allowedCodes2 as $allowedCode2) {
+
+if ($codeTyX==$allowedCode2) {
+    
         $codedesc2 = lookup_code_descriptions($diag2);
         $codetext2 = '<option title="' . '(' . $codedesc2 . ')"' . ' value="' . $diag2 . '">' . $diag2 . " (" . $codedesc2 . ")" . "</option>";
         echo $codetext2;
-    }
-    } else {
-        echo '<option>(No Results Found)</option>';
-    }
-    
+
+}
+}
+}
+}
+//else {
+//        echo '<option>(No Results Found)</option>';
+//}
+
+
+
+
+
+
+
+
+
+
     
     echo "</select>";
     echo "</td>";
