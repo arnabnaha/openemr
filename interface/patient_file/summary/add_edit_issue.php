@@ -532,7 +532,7 @@ function divclick(cb, divid) {
 
 <?php /////////////////////////////////////////////
               
-if (($irow['type']=="medical_problem") || ($irow['type']=="medication") || ($irow['type']=="surgery")) {
+if (!$GLOBALS['athletic_team'] && !$GLOBALS['ippf_specific'] && (($irow['type']=="medical_problem") || ($irow['type']=="medication") || ($irow['type']=="surgery"))) {
 
     if ($irow['type']=="medical_problem") {
 
@@ -540,7 +540,10 @@ if (($irow['type']=="medical_problem") || ($irow['type']=="medication") || ($iro
     }
     elseif ($irow['type']=="medication") {
 
-        $allowedCodes2=collect_codetypes("diagnosis");
+        $allowedCodes0 = collect_codetypes("diagnosis");
+        $allowedCodes1 = collect_codetypes("drug");
+
+        $allowedCodes2 = array_merge($allowedCodes0, $allowedCodes1);
     }
 
     elseif ($irow['type']=="surgery") {
@@ -550,8 +553,7 @@ if (($irow['type']=="medical_problem") || ($irow['type']=="medication") || ($iro
 
 
 
-
-    echo '<script>';
+    echo '<script language="javascript">';
     echo 'function codeBoxFunction2() {';
     echo 'var frm=document.forms[0];';
     echo 'var x2 = frm.form_codeSelect2.options[frm.form_codeSelect2.selectedIndex].value;';
@@ -564,14 +566,13 @@ if (($irow['type']=="medical_problem") || ($irow['type']=="medication") || ($iro
     echo '}';
     echo '</script>';
 
-
     echo '<tr>';
     echo '<td><b>Active Issue Codes</b></td>';
     echo '<td>';
 
     $codeList2 = array();
 
-    $issueCodes2 = sqlStatement("SELECT diagnosis FROM lists WHERE pid = ? AND enddate is NULL", array($thispid));
+    $issueCodes2 = sqlStatement("SELECT diagnosis FROM lists WHERE pid = ? AND enddate is NULL AND type IN ('medical_problem', 'allergy', 'medication', 'surgery', 'dental')", array($thispid));
 
     echo '<select size="4" name="form_codeSelect2" onchange="codeBoxFunction2()" style="max-width:100%;">';
 
@@ -579,9 +580,11 @@ if (($irow['type']=="medical_problem") || ($irow['type']=="medication") || ($iro
 
         if ($issueCodesRow2['diagnosis'] != "") {
 
-            $diags2 = explode(";", $issueCodesRow2['diagnosis']);
-            $codeList2=array_merge($codeList2, $diags2);
+            $someCodes2 = explode(";", $issueCodesRow2['diagnosis']);
+            $codeList2 = array_merge($codeList2, $someCodes2);
+
         }
+
     }
 
     if ($codeList2) {
@@ -590,35 +593,26 @@ if (($irow['type']=="medical_problem") || ($irow['type']=="medication") || ($iro
     sort($codeList2);
 
 
-
-//////////
-    foreach ($codeList2 as $diag2) {
+    foreach ($codeList2 as $codeCode2) {
     
-list($codeTyX, $theCode)=explode(":", $diag2);
+        list($codeTyX,)=explode(":", $codeCode2);
 
-foreach ($allowedCodes2 as $allowedCode2) {
+        foreach ($allowedCodes2 as $allowedCode2) {
 
-if ($codeTyX==$allowedCode2) {
+            if ($codeTyX==$allowedCode2) {
     
-        $codedesc2 = lookup_code_descriptions($diag2);
-        $codetext2 = '<option title="' . '(' . $codedesc2 . ')"' . ' value="' . $diag2 . '">' . $diag2 . " (" . $codedesc2 . ")" . "</option>";
-        echo $codetext2;
+                $codedesc2 = lookup_code_descriptions($codeCode2);
+                $codetext2 = '<option title="' . '(' . text(trim($codedesc2)) . ')"' . ' value="' . $codeCode2 . '">' . $codeCode2 . " (" . text(trim($codedesc2)) . ")" . "</option>";
+                echo $codetext2;
+                break;
+
+            }
+            
+        }
+        
+    }
 
 }
-}
-}
-}
-//else {
-//        echo '<option>(No Results Found)</option>';
-//}
-
-
-
-
-
-
-
-
 
 
     
