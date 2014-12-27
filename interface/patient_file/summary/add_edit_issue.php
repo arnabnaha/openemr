@@ -486,7 +486,7 @@ ActiveIssueCodeRecycleFn($thispid, $ISSUE_TYPES);
   document.getElementById('row_severity'      ).style.display = alldisp;
   document.getElementById('row_reaction'      ).style.display = alldisp;
   document.getElementById('row_referredby'    ).style.display = (f.form_referredby.value) ? '' : comdisp;
-  document.getElementById('row_comments'      ).style.display = (f.form_comments.value  ) ? '' : revdisp;
+  document.getElementById('row_comments'      ).style.display = (f.form_comments.value  ) ? '' : comdisp;
 <?php if ($GLOBALS['athletic_team']) { ?>
   document.getElementById('row_returndate' ).style.display = comdisp;
   document.getElementById('row_injury_grade'  ).style.display = injdisp;
