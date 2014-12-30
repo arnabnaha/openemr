@@ -36,9 +36,9 @@ $db_email_msg = cron_getNotificationData($TYPE);
 
 // object for sms
 global $mysms;
-if( $db_email_msg['sms_gateway_type']=='CLICKATELL' )
+if( $db_email_msg['sms_gateway_type']=='mVaayoo' )
 {
-	include_once("sms_clickatell.php");
+	include_once("sms_mvaayoo.php");
 	
 }else if($db_email_msg['sms_gateway_type']=='TMB4')
 {
@@ -130,7 +130,7 @@ for( $p=0; $p<count($db_patient); $p++ )
 }
 
 unset($mysms);
-sqlClose();
+//sqlClose();
 
 ?>
 
