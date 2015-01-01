@@ -36,9 +36,9 @@ $db_email_msg = cron_getNotificationData($TYPE);
 
 // object for sms
 global $mysms;
-if( $db_email_msg['sms_gateway_type']=='CLICKATELL' )
+if( $db_email_msg['sms_gateway_type']=='mVaayoo' )
 {
-	include_once("sms_clickatell.php");
+	include_once("sms_mvaayoo.php");
 	
 }else if($db_email_msg['sms_gateway_type']=='TMB4')
 {
@@ -66,7 +66,7 @@ for( $p=0; $p<count($db_patient); $p++ )
 {  
 	$prow =$db_patient[$p];
 
-	//echo "\n-----\nDEBUG :cron_sms: found patient = ".$prow['fname']." ".$prow['lname']."\n";
+	echo "::Patient Name = ".$prow['fname']." ".$prow['lname']."\n";
 
 	// my_print_r($prow);
 	/*
@@ -110,7 +110,7 @@ for( $p=0; $p<count($db_patient); $p++ )
 		}
 
 		// larry :: debug
-		echo "\nDEBUG :: sms was sent to= ".$prow['phone_cell'].
+		echo ":: SMS was sent to= ".$prow['phone_cell'].
 					" \nsender= ".$db_email_msg['email_sender'].
 					" \nsbj= ". $db_email_msg['email_subject'].
 					" \nmsg= ".$db_email_msg['message']."\n";
@@ -130,7 +130,7 @@ for( $p=0; $p<count($db_patient); $p++ )
 }
 
 unset($mysms);
-sqlClose();
+//sqlClose();
 
 ?>
 
