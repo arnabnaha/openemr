@@ -163,11 +163,11 @@ function WriteLog( $data )
 }
 
 ////////////////////////////////////////////////////////////////////
-// define my_print_r - used for debuging - if not defined 
+// define print_r2 - used for debuging - if not defined 
 ////////////////////////////////////////////////////////////////////
-if( !function_exists( 'my_print_r' ) )
+if( !function_exists( 'print_r2' ) )
 {
-	function my_print_r($data)
+	function print_r2($data)
 	{
 		echo "<pre>";print_r($data);echo "</pre>";
 	}
@@ -275,6 +275,7 @@ function cron_getAlertpatientData( $type )
 		$patient_array[$cnt] = $prow;
 		$cnt++;
 	}
+	//print_r($patient_array);
 	return $patient_array;
 }
 
