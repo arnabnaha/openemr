@@ -302,8 +302,135 @@ div.section {
  }
 ?>
 
+
+
+
+<?php //////////////////////////////
+
+$requiredMode2 = (!$GLOBALS['athletic_team'] && !$GLOBALS['ippf_specific']) ? 1 : 0;
+
+if ($requiredMode2) {
+?>
+/////////////////////////////
+/////////////////////////////
+var listBoxOptions2 = new Array();
+//listBoxOptions2[0] = new Array();
+//listBoxOptions2[1] = new Array();
+//listBoxOptions2[2] = new Array();
+//listBoxOptions2[3] = new Array();
+//listBoxOptions2[4] = new Array();
+/////////////////////////////
+<?php } ?>
+
+<?php /////////////////////////////////////////////////
+if ($requiredMode2) {
+
+
+
+
+
+    $allowedCodes2 = array();
+
+    $allowedCodes2[0] = collect_codetypes("medical_problem");
+    $allowedCodes2[1] = collect_codetypes("diagnosis");
+    $allowedCodes2[2] = collect_codetypes("drug");
+
+
+
+
+    $codeList2 = array();
+
+    $issueCodes2 = sqlStatement("SELECT diagnosis FROM lists WHERE pid = ? AND enddate is NULL AND type IN ('medical_problem', 'allergy', 'medication', 'surgery', 'dental')", array($thispid));
+
+    while ($issueCodesRow2 = sqlFetchArray($issueCodes2)) {
+
+        if ($issueCodesRow2['diagnosis'] != "") {
+
+            $someCodes2 = explode(";", $issueCodesRow2['diagnosis']);
+            $codeList2 = array_merge($codeList2, $someCodes2);
+
+        }
+
+    }
+
+    if ($codeList2) {
+
+    $codeList2=array_unique($codeList2);
+    sort($codeList2);
+    
+
+    $memberCodes2 = array();
+    $memberCodes2[0] = array();
+    $memberCodes2[1] = array();
+    $memberCodes2[2] = array();
+
+    // Test membership of codes to each issue type
+    foreach ($allowedCodes2 as $akeyw => $allowCodes2) {
+
+        foreach ($codeList2 as $listCode2) {
+
+            list($codeTyX,) = explode(":", $listCode2);
+
+            if (in_array($codeTyX, $allowCodes2)) {
+            
+                array_push($memberCodes2[$akeyw], $listCode2);
+
+            }
+
+        }
+
+    }
+        
+    $displayCodes2 = array();
+    $displayCodes2[0] = $memberCodes2[0];
+    $displayCodes2[1] = array();
+    $displayCodes2[2] = array_merge($memberCodes2[1], $memberCodes2[2]);
+    $displayCodes2[3] = $memberCodes2[1];
+    $displayCodes2[4] = array();
+
+    // Output options
+    foreach ($displayCodes2 as $akeye => $displayCode2) {
+
+        echo "listBoxOptions2[$akeye] = new Array();\n";
+        
+        if ($akeye != 1 && $akeye != 4) {
+
+        foreach ($displayCode2 as $dispCode2) {
+
+            $codeDesc2 = lookup_code_descriptions($dispCode2);
+            echo "listBoxOptions2[$akeye][listBoxOptions2[$akeye].length] = new Option('" . $dispCode2 . " (" . attr(trim($codeDesc2)) . ") ' ,'" . $dispCode2 . "' , false, false);\n";
+
+            }
+
+        }
+
+    }
+
+    }
+
+    
+}
+/////////////////////////////////////////////////////
+?>
+
+
+
+
 <?php require($GLOBALS['srcdir'] . "/restoreSession.php"); ?>
 
+///////////////////////////
+///////////////////////////
+function codeBoxFunction2() {
+var frm=document.forms[0];
+var x2 = frm.form_codeSelect2.options[frm.form_codeSelect2.selectedIndex].value;
+frm.form_codeSelect2.selectedIndex = -1;
+var x6 = frm.form_diagnosis.value;
+if (x6.length > 0) x6 += ";";
+x6 += x2;
+frm.form_diagnosis.value = x6;
+}
+///////////////////////////
+///////////////////////////
  // React to selection of an issue type.  This loads the associated
  // shortcuts into the selection list of titles, and determines which
  // rows are displayed or hidden.
@@ -316,6 +443,20 @@ div.section {
    theopts[i] = aopts[index][i];
   }
   document.getElementById('row_titles').style.display = i ? '' : 'none';
+<?php if ($requiredMode2) { ///////////////////?>
+///////////////////////
+///////////////////////
+  var listBoxOpts2 = f.form_codeSelect2.options;
+  listBoxOpts2.length = 0;
+  var ix = 0;
+  for (ix = 0; ix < listBoxOptions2[index].length; ++ix) {
+   listBoxOpts2[ix] = listBoxOptions2[index][ix];
+   listBoxOpts2[ix].title = listBoxOptions2[index][ix].text;
+  }
+document.getElementById('row_codeSelect2').style.display = ix ? '' : 'none';
+//////////////////////
+//////////////////////
+<?php } ////////////////////////////////////// ?>
   // Show or hide various rows depending on issue type, except do not
   // hide the comments or referred-by fields if they have data.
   var comdisp = (aitypes[index] == 1) ? 'none' : '';
@@ -528,105 +669,18 @@ function divclick(cb, divid) {
  </tr>
 
 
+<?php if ($requiredMode2) { ////////////////// ?>
 
+<tr id='row_codeSelect2'>
+<td><b>Active Issue Codes: </b>
+</td>
+<td>
+ <select name='form_codeSelect2' size='4' onchange="codeBoxFunction2()" style="max-width:100%;">
+ </select>
+</td>
+</tr>
 
-<?php /////////////////////////////////////////////
-              
-if (!$GLOBALS['athletic_team'] && !$GLOBALS['ippf_specific'] && (($irow['type']=="medical_problem") || ($irow['type']=="medication") || ($irow['type']=="surgery"))) {
-
-    if ($irow['type']=="medical_problem") {
-
-        $allowedCodes2=collect_codetypes("medical_problem");
-    }
-    elseif ($irow['type']=="medication") {
-
-        $allowedCodes0 = collect_codetypes("diagnosis");
-        $allowedCodes1 = collect_codetypes("drug");
-
-        $allowedCodes2 = array_merge($allowedCodes0, $allowedCodes1);
-    }
-
-    elseif ($irow['type']=="surgery") {
-
-       $allowedCodes2=collect_codetypes("diagnosis");
-    }
-
-
-
-    echo '<script language="javascript">';
-    echo 'function codeBoxFunction2() {';
-    echo 'var frm=document.forms[0];';
-    echo 'var x2 = frm.form_codeSelect2.options[frm.form_codeSelect2.selectedIndex].value;';
-    echo 'frm.form_codeSelect2.selectedIndex = -1;';
- 
-    echo 'var x6 = frm.form_diagnosis.value;';
-    echo 'if (x6.length > 0) x6 += ";";';
-    echo 'x6 += x2;';
-    echo 'frm.form_diagnosis.value = x6;';
-    echo '}';
-    echo '</script>';
-
-    echo '<tr>';
-    echo '<td><b>Active Issue Codes</b></td>';
-    echo '<td>';
-
-    $codeList2 = array();
-
-    $issueCodes2 = sqlStatement("SELECT diagnosis FROM lists WHERE pid = ? AND enddate is NULL AND type IN ('medical_problem', 'allergy', 'medication', 'surgery', 'dental')", array($thispid));
-
-    echo '<select size="4" name="form_codeSelect2" onchange="codeBoxFunction2()" style="max-width:100%;">';
-
-    while ($issueCodesRow2 = sqlFetchArray($issueCodes2)) {
-
-        if ($issueCodesRow2['diagnosis'] != "") {
-
-            $someCodes2 = explode(";", $issueCodesRow2['diagnosis']);
-            $codeList2 = array_merge($codeList2, $someCodes2);
-
-        }
-
-    }
-
-    if ($codeList2) {
-
-    $codeList2=array_unique($codeList2);
-    sort($codeList2);
-
-
-    foreach ($codeList2 as $codeCode2) {
-    
-        list($codeTyX,)=explode(":", $codeCode2);
-
-        foreach ($allowedCodes2 as $allowedCode2) {
-
-            if ($codeTyX==$allowedCode2) {
-    
-                $codedesc2 = lookup_code_descriptions($codeCode2);
-                $codetext2 = '<option title="' . '(' . text(trim($codedesc2)) . ')"' . ' value="' . $codeCode2 . '">' . $codeCode2 . " (" . text(trim($codedesc2)) . ")" . "</option>";
-                echo $codetext2;
-                break;
-
-            }
-            
-        }
-        
-    }
-
-}
-
-
-    
-    echo "</select>";
-    echo "</td>";
-    echo "</tr>";
-}    
-///////////////////////////////////////////////////
-?>
-
-
-
-
-
+<?php } ////////////////////////////////////// ?>
 
 
  <tr id='row_diagnosis'>
