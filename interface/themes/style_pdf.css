@@ -516,7 +516,7 @@ font-weight: bold;
     width:80%;
 }
 #report_custom hr {
-    border: 2px dotted black;
+    border: 1px dotted black;
 }
 #report_custom .billing {
     margin: 5px;
@@ -583,14 +583,14 @@ font-weight: bold;
     margin-top: 10px;
 }
 #report_custom .encounter h1 {
-    font-size: 140%;
+    font-size: 120%;
     margin: 0px;
     padding: 0px;
 }
 #report_custom .encounter_form {
     margin: 10px;
     padding: 0px;
-    border-top: 1px solid gray;
+    #border-top: 1px solid gray;
 }
 #report_custom img.bigimage {
     width: 540pt; /* 540pt = 7.5 inches */
