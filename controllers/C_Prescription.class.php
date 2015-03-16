@@ -475,29 +475,18 @@ class C_Prescription extends Controller {
         }
 
 	function get_prescription_body_text($p) {
-		$body = '<b>' . xl('Rx') . ': ' . $p->get_drug() . ' ' . $p->get_size() . ' ' . $p->get_unit_display();
-		if ($p->get_form()) $body .= ' [' . $p->form_array[$p->get_form()] . "]";
-		$body .= "</b>     <i>" .
-			$p->substitute_array[$p->get_substitute()] . "</i>\n" .
-			'<b>' . xl('Disp #') . ':</b> <u>' . $p->get_quantity() . "</u>\n" .
-			'<b>' . xl('Sig') . ':</b> ' . $p->get_dosage() . ' ' . $p->form_array[$p->get_form()] . ' ' .
-			$p->route_array[$p->get_route()] . ' ' . $p->interval_array[$p->get_interval()] . "\n";
-		if ($p->get_refills() > 0) {
-			$body .= "\n<b>" . xl('Refills') . ":</b> <u>" .  $p->get_refills();
-			if ($p->get_per_refill()) {
-				$body .= " " . xl('of quantity') . " " . $p->get_per_refill();
-			}
-			$body .= "</u>\n";
-		}
-		else {
-			$body .= "\n<b>" . xl('Refills') . ":</b> <u>0 (" . xl('Zero') . ")</u>\n";
-		}
-		$note = $p->get_note();
-		if ($note != '') {
-			$body .= "\n$note\n";
-		}
-		return $body;
-	}
+    $body = '<b>' . xl('Rx') . ': ' . $p->get_drug() . ' ' . $p->get_size() . ' ' . $p->get_unit_display();
+    if ($p->get_form()) $body .= ' [' . $p->form_array[$p->get_form()] . "]";
+    $body .= ' - ' . xl('Quantity') . ':</b> <u>' . $p->get_quantity() . "</u>" .
+        '<b> - ' . xl('Sig') . ':</b> ' . $p->get_dosage() . ' ' . $p->form_array[$p->get_form()] . ' ' .
+        $p->route_array[$p->get_route()] . ' ' . $p->interval_array[$p->get_interval()] . "\n";
+
+    $note = $p->get_note();
+    if ($note != '') {
+        $body .= '<b>' . xl('Directions') . ': </b>' . $note . "\n";
+    }
+    return $body;
+    }
 
 	function multiprintfax_body(& $pdf, $p){
 		return $this->multiprint_body( $pdf, $p );
@@ -571,7 +560,7 @@ class C_Prescription extends Controller {
 			if ($on_this_page == 0) {
 				$this->multiprint_header($pdf, $p);
 			}
-			if (++$on_this_page > 3 || $p->provider->id != $this->providerid) {
+			if (++$on_this_page > 7 || $p->provider->id != $this->providerid) {
 				$this->multiprint_footer($pdf);
 				$pdf->ezNewPage();
 				$this->multiprint_header($pdf, $p);
