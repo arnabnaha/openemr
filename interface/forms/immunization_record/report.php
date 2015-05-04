@@ -1,7 +1,7 @@
 <?
 function immunization_record_report( $pid, $encounter, $cols, $id) { 
 
-include_once("../../globals.php");
+include_once(dirname(__FILE__).'/../../globals.php');
 include_once("$srcdir/api.inc");
    $fres=sqlStatement("select * from patient_data where pid='".$pid."'");
    if ($fres){

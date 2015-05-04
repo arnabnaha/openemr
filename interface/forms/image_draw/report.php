@@ -1,5 +1,5 @@
 <?php
-include_once("../../globals.php");
+include_once(dirname(__FILE__).'/../../globals.php');
 include_once($GLOBALS["srcdir"]."/api.inc");
 
 function image_draw_report( $pid, $encounter, $cols, $id) {

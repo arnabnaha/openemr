@@ -2,7 +2,7 @@
 # for reporting the files scanned on the forms
 # this is for scanned docs.
 
-include_once("../../globals.php");
+include_once(dirname(__FILE__).'/../../globals.php');
 include_once($GLOBALS["srcdir"]."/api.inc");
 
 
