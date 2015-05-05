@@ -231,7 +231,7 @@ class C_Prescription extends Controller {
 		//print header
 		$pdf->ezImage($GLOBALS['oer_config']['prescriptions']['logo'],'','50','','center','');
 		$pdf->ezColumnsStart(array('num'=>2, 'gap'=>10));
-		$res = sqlQuery("SELECT concat('<b>',f.name,'</b>\n',f.street,'\n',f.city,', ',f.state,' ',f.postal_code,'\nTel:',f.phone,if(f.fax != '',concat('\nFax: ',f.fax),'')) addr FROM users JOIN facility AS f ON f.name = users.facility where users.id ='" .
+		$res = sqlQuery("SELECT concat('<b>',f.name,'</b>\n',f.street,'\n',f.city,', ',f.state,' ',f.postal_code,'\nTel: ',f.phone,if(f.fax != '',concat('\nFax: ',f.fax),'')) addr FROM users JOIN facility AS f ON f.name = users.facility where users.id ='" .
 			mysql_real_escape_string($p->provider->id) . "'");
 		$pdf->ezText($res['addr'],12);
 		$my_y = $pdf->y;
@@ -455,7 +455,7 @@ class C_Prescription extends Controller {
 				return;
 			}
 		}
-		$pdf->ezText("\n\n\n\n" . xl('Signature') . ":________________________________\n" . xl('Date') . ": " . date('Y-m-d'),12);
+		$pdf->ezText("\n\n" . xl('Signature') . ":________________________________\n" . xl('Date') . ": " . date('Y-m-d'),12);
 	}
 
         function multiprintcss_footer() {
@@ -475,18 +475,17 @@ class C_Prescription extends Controller {
         }
 
 	function get_prescription_body_text($p) {
-    $body = '<b>' . xl('Rx') . ': ' . $p->get_drug() . ' ' . $p->get_size() . ' ' . $p->get_unit_display();
-    if ($p->get_form()) $body .= ' [' . $p->form_array[$p->get_form()] . "]";
-    $body .= ' - ' . xl('Quantity') . ':</b> <u>' . $p->get_quantity() . "</u>" .
-        '<b> - ' . xl('Sig') . ':</b> ' . $p->get_dosage() . ' ' . $p->form_array[$p->get_form()] . ' ' .
-        $p->route_array[$p->get_route()] . ' ' . $p->interval_array[$p->get_interval()] . "\n";
-
-    $note = $p->get_note();
-    if ($note != '') {
-        $body .= '<b>' . xl('Directions') . ': </b>' . $note . "\n";
-    }
-    return $body;
-    }
+		$body = '<b>' . xl('Rx') . ': ' . $p->get_drug() . '</b>  ' . $p->get_size() . ' ' . $p->get_unit_display();
+		if ($p->get_form()) $body .= ' [' . $p->form_array[$p->get_form()] . "]";
+		$body .= '<b>  -  ' . xl('Disp #') . ':</b> <u>' . $p->get_quantity() . "</u>" .
+			'<b>  -  ' . xl('Sig') . ':</b> ' . $p->get_dosage() . ' ' . $p->form_array[$p->get_form()] . ' ' .
+			$p->route_array[$p->get_route()] . ' ' . $p->interval_array[$p->get_interval()] . "\n";
+		$note = $p->get_note();
+		if ($note != '') {
+			$body .= "<b>Note: </b>$note\n";
+		}
+		return $body;
+	}
 
 	function multiprintfax_body(& $pdf, $p){
 		return $this->multiprint_body( $pdf, $p );
@@ -516,7 +515,7 @@ class C_Prescription extends Controller {
 		$pdf->ezText($d,10);
 		$pdf->ez['leftMargin'] = $GLOBALS['rx_left_margin'];
 		$pdf->ez['rightMargin'] = $GLOBALS['rx_right_margin'];
-		$pdf->ezText('');
+//		$pdf->ezText('');
 		$pdf->line($pdf->ez['leftMargin'],$pdf->y,$pdf->ez['pageWidth']-$pdf->ez['rightMargin'],$pdf->y);
 		$pdf->ezText('');
 	}
@@ -560,7 +559,7 @@ class C_Prescription extends Controller {
 			if ($on_this_page == 0) {
 				$this->multiprint_header($pdf, $p);
 			}
-			if (++$on_this_page > 7 || $p->provider->id != $this->providerid) {
+			if (++$on_this_page > 8 || $p->provider->id != $this->providerid) {
 				$this->multiprint_footer($pdf);
 				$pdf->ezNewPage();
 				$this->multiprint_header($pdf, $p);
