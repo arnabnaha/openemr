@@ -36,22 +36,25 @@ $db_email_msg = cron_getNotificationData($TYPE);
 
 // object for sms
 global $mysms;
-if( $db_email_msg['sms_gateway_type']=='mVaayoo' )
+if( $db_email_msg['sms_gateway_type']=='CLICKATELL' )
 {
-	include_once("sms_mvaayoo.php");
+	include_once("sms_clickatell.php");
 	
 }else if($db_email_msg['sms_gateway_type']=='TMB4')
 {
 	include_once("sms_tmb4.php");
+}else if($db_email_msg['sms_gateway_type']=='mVaayoo')
+{
+	include_once("sms_mVaayoo.php");
 }
-
+//echo $db_email_msg['sms_gateway_type'];
 // get notification settings
-$vectNotificationSettings = cron_GetNotificationSettings( );
-$SMS_GATEWAY_USENAME = $vectNotificationSettings['SMS_gateway_username'];
-$SMS_GATEWAY_PASSWORD = $vectNotificationSettings['SMS_gateway_password'];
-$SMS_GATEWAY_APIKEY = $vectNotificationSettings['SMS_gateway_apikey'];
+//$vectNotificationSettings = cron_GetNotificationSettings( );
+//$SMS_GATEWAY_USENAME = $vectNotificationSettings['SMS_gateway_username'];
+//$SMS_GATEWAY_PASSWORD = $vectNotificationSettings['SMS_gateway_password'];
+//$SMS_GATEWAY_APIKEY = $vectNotificationSettings['SMS_gateway_apikey'];
 // set cron time (time to event ?) - todo extra tests
-$CRON_TIME = $vectNotificationSettings['Send_SMS_Before_Hours'];
+//$CRON_TIME = $vectNotificationSettings['Send_SMS_Before_Hours'];
 	
 //echo "\nDEBUG :: user=".$vectNotificationSettings['SMS_gateway_username']."\n";
 
@@ -66,7 +69,7 @@ for( $p=0; $p<count($db_patient); $p++ )
 {  
 	$prow =$db_patient[$p];
 
-	echo "::Patient Name = ".$prow['fname']." ".$prow['lname']."\n";
+	//echo "\n-----\nDEBUG :cron_sms: found patient = ".$prow['fname']." ".$prow['lname']."\n";
 
 	// my_print_r($prow);
 	/*
@@ -110,10 +113,10 @@ for( $p=0; $p<count($db_patient); $p++ )
 		}
 
 		// larry :: debug
-		echo ":: SMS was sent to= ".$prow['phone_cell'].
-					" \nsender= ".$db_email_msg['email_sender'].
-					" \nsbj= ". $db_email_msg['email_subject'].
-					" \nmsg= ".$db_email_msg['message']."\n";
+		//echo "\nDEBUG :: sms was sent to= ".$prow['phone_cell'].
+		//			" \nsender= ".$db_email_msg['email_sender'].
+		//			" \nsbj= ". $db_email_msg['email_subject'].
+		//			" \nmsg= ".$db_email_msg['message']."\n";
 		
 		//update entry >> pc_sendalertsms='Yes'
 		cron_updateentry($TYPE,$prow['pid'],$prow['pc_eid']);

@@ -11,7 +11,7 @@ if (true){
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-require_once('C:/xampp/htdocs/openemr/logging/logController.php');
+require_once('../../logging/logController.php');
 
 class sms{
 	var $baseURL = "";
