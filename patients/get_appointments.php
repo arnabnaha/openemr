@@ -5,11 +5,7 @@
  // modify it under the terms of the GNU General Public License
  // as published by the Free Software Foundation; either version 2
  // of the License, or (at your option) any later version.
-
-
         require_once("verify_session.php");
-
-
 	$query = "SELECT e.pc_eid, e.pc_aid, e.pc_title, e.pc_eventDate, " .
 	  "e.pc_startTime, e.pc_hometext, u.fname, u.lname, u.mname, " .
 	  "c.pc_catname " .
@@ -41,16 +37,16 @@
 			  if ($row['pc_hometext'] != "") {
 				$etitle = 'Comments'.": ".$row['pc_hometext']."\r\n";
 			  } else {
-				$etitle = "";
+				$etitle = "Patient Scheduled via Portal";
 			  }
-              if ($GLOBALS['portal_onsite_appt_modify']) {
-                echo "<a href='add_edit_event_user.php?eid=" . htmlspecialchars($row['pc_eid'],ENT_QUOTES) .
-		  "' class='edit_event iframe' title='" . htmlspecialchars($etitle,ENT_QUOTES) . "'>";
+              if ($GLOBALS['portal_onsite_appt_modify'] && $GLOBALS['portal_delete_change_appt']) {   # add a global to allow delete/change portal_delete_change_appt
+                echo "<a href='add_edit_event_user.php?eid=" . attr($row['pc_eid']) .
+		  "' class='edit_event iframe' title='" . text($etitle) . "'>";
               }
-			  echo "<b>" . htmlspecialchars($dayname . ", " . $row['pc_eventDate'],ENT_NOQUOTES) . "</b><br>";
-			  echo htmlspecialchars("$disphour:$dispmin " . $dispampm . " " . $row['pc_catname'],ENT_NOQUOTES) . "<br>\n";
-			  echo htmlspecialchars($row['fname'] . " " . $row['lname'],ENT_NOQUOTES);
-                          if ($GLOBALS['portal_onsite_appt_modify']) {
+			  echo "<b>" . attr($dayname . ", " . $row['pc_eventDate']) . "</b><br>";
+			  echo attr("$disphour:$dispmin " . $dispampm . " " . $row['pc_catname']) . "<br>\n";
+			  echo attr($row['fname'] . " " . $row['lname']);
+                          if ($GLOBALS['portal_onsite_appt_modify'] && $GLOBALS['portal_delete_change_appt']) {  # add a global to allow delete/change
                             echo "</a><br>\n";
                           }
                           else {
@@ -58,9 +54,9 @@
                           }
 			 }
 			 if (isset($res) && $res != null) {
-				if ( $count < 1 ) { echo "&nbsp;&nbsp;" . htmlspecialchars('None',ENT_NOQUOTES); }
+				if ( $count < 1 ) { echo "&nbsp;&nbsp;" . xlt('None'); }
 			 }
 	} else { // if no appts
-		echo htmlspecialchars( xl('No Appointments'),ENT_NOQUOTES);
+		echo xlt('No Appointments');
 	}
 ?>
