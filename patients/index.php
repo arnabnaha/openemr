@@ -211,7 +211,7 @@
             </table>
         </form>
 
-        <div class="copyright"><?php echo xlt('Powered by');?> OpenEMR</div>
+        <div class="copyright"><?php echo xlt('Powered by');?> Naha Health Clinic</div>
       </div>
     <?php } else { ?>
       <div id="wrapper" class="centerwrapper"><?php echo $newlogocode;?>
@@ -262,7 +262,7 @@
             <?php if (!(empty($hiddenLanguageField))) echo $hiddenLanguageField; ?>
 	</form>
     
-        <div class="copyright"><?php echo xlt('Powered by');?> OpenEMR</div>
+        <div class="copyright"><?php echo xlt('Powered by');?> Naha Health Clinic</div>
       </div>
     <?php } ?>
 

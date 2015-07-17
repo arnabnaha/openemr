@@ -60,9 +60,9 @@
 	.heading {
 	    position: absolute;
 	    top: -60px;
-	    margin-left: 35px;
+	    margin-left: 100px;
 	    color: #0c2858;
-	    font-style: italic;
+	    font-style: normal;
 	}
 
 	
@@ -84,9 +84,9 @@
     
 	    .centerwrapper {
 		top: 50%;
-		margin-top: -120px;
+		margin-top: -150px;
 		left: 50%;
-		margin-left: -200px;
+		margin-left: -220px;
 	    }
 
 	    .lefttop {
@@ -97,8 +97,8 @@
 	    }
 	    
 	    .leftwrapper {
-		margin-top: 200px;
-		margin-left: 400px;
+		margin-top: 100px;
+		margin-left: 300px;
 	    }
 	
 	#gradient  {
