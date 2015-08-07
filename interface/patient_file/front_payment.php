@@ -367,11 +367,11 @@ $tot = sqlQuery("select sum(pay_amount) as tot from ar_activity where pid=?", ar
 $fe = sqlQuery("select sum(fee) as fees from billing where pid=?", array($form_pid));
 $due = $fe['fees'] - ($_POST['form_paytotal'] + $_POST['tot_char']);
 $past_enc = sqlStatement("select encounter from payments where pid = ? and  dtime = ? and amount2 != '0.00'", array($form_pid,$timestamp));
-$past_enc_date = array();
-while($row = sqlFetchArray($past_enc))
-{
-array_push($past_enc_date, sqlQuery("select encounter,date from form_encounter where encounter=?",array($row['encounter'])));
-}
+ $past_enc_date = array();
+ while($row = sqlFetchArray($past_enc))
+ {
+ array_push($past_enc_date, sqlQuery("select encounter,date from form_encounter where encounter=?",array($row['encounter'])));
+ }
 ?>
 
 <title><?php echo xlt('Receipt for Payment'); ?></title>
@@ -432,7 +432,7 @@ array_push($past_enc_date, sqlQuery("select encounter,date from form_encounter w
 <p>
 <table border='0' cellspacing='8'>
  <tr>
-  <td><?php echo xlt('Date of Payment'); ?>:</td>
+  <td><?php echo xlt('Date'); ?>:</td>
   <td><?php echo text(oeFormatSDFT(strtotime($payrow['dtime']))) ?></td>
  </tr>
  <tr>
@@ -449,41 +449,45 @@ array_push($past_enc_date, sqlQuery("select encounter,date from form_encounter w
   <td><?php echo text($payrow['source']) ?></td>
  </tr>
  <tr>
-  <td><?php echo xlt('Amount paid for current visit'); ?>:</td>
+  <td><?php echo xlt('Amount for This Visit'); ?>:</td>
   <td><?php echo text(oeFormatMoney($payrow['amount1'])) ?></td>
  </tr>
  <tr>
-  <td><?php echo xlt('Amount paid for previous visit'); ?>:</td>
+  <td><?php echo xlt('Amount for Past Balance'); ?>:</td>
   <td><?php echo text(oeFormatMoney($payrow['amount2'])) ?></td>
  </tr>
  <tr>
-  <td><?php echo xlt('Past Encounter and Date'); ?>:</td>
-  <td><table border=1>
-  <tr>
-  <td><b><?php echo xlt('Past Encounter No.'); ?></b></td>
-  <td><b><?php echo xlt('Past Encounter Date'); ?></b></td>
+    <td><?php echo xlt('Total Charge'); ?>:</td>
+    <td><?php echo text($fe['fees']) ?></td>
+</tr>
+<tr>
+<td><?php echo xlt('Past Encounter and Date'); ?>:</td>
+<td><table border=1>
+<tr>
+<td><b><?php echo xlt('Past Encounter No.'); ?></b></td>
+<td><b><?php echo xlt('Past Encounter Date'); ?></b></td>
 <?php foreach($past_enc_date as $value) { ?>
- <tr>
-  <td> <?php echo text($value['encounter']) ?> </td>
-  <td> <?php echo text (oeFormatSDFT(strtotime($value['date']))) ?> </td>
+<tr>
+<td> <?php echo text($value['encounter']) ?> </td>
+<td> <?php echo text (oeFormatSDFT(strtotime($value['date']))) ?> </td>
 </tr>
 <?php } ?>
 </tr>
 </table></td>
 </tr>
  <tr>
-  <td><?php echo xlt('Total Amount Paid'); ?>:</td>
-  <td><?php echo text(oeFormatMoney($_POST['form_paytotal'])) ?></td>
- </tr>
- <tr>
-  <td><?php echo xlt('Total Amount Due'); ?>:</td>
-  <td><?php echo(oeFormatMoney($due))  ?></td>
- </tr>
- <tr>
   <td><?php echo xlt('Received By'); ?>:</td>
   <td><?php echo text($payrow['user']) ?></td>
  </tr>
 </table>
+<tr>
+    <td><?php echo xlt('Total Amount Paid'); ?>:</td>
+    <td><?php echo text($_POST['form_paytotal'] + $_POST['tot_char']) ?></td>
+</tr>
+<tr>
+    <td><?php echo xlt('Due Amount'); ?>:</td>
+    <td><?php echo ($due)  ?></td>
+</tr>
 
 <div id='hideonprint'>
 <p>
@@ -1272,7 +1276,7 @@ function make_insurance()
 <script language="JavaScript">
  calctotal();
 $(document).ready(function() {
-$('#tot_char').val(<?php echo $tot_charges ?>);
+    $('#tot_char').val(<?php echo $tot_charges ?>);
 });
 </script>
 </center>
