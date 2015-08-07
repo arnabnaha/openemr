@@ -51,8 +51,10 @@ function rawbucks($amount) {
 // Display a row of data for an encounter.
 //
 $var_index=0;
+$tot_charges=0;
 function echoLine($iname, $date, $charges, $ptpaid, $inspaid, $duept,$encounter=0,$copay=0,$patcopay=0) {
-  global $var_index;
+  global $var_index,$tot_charges;
+  $tot_charges += $ptpaid;
   $var_index++;
   $balance = bucks($charges - $ptpaid - $inspaid);
   $balance = (round($duept,2) != 0) ? 0 : $balance;//if balance is due from patient, then insurance balance is displayed as zero
@@ -361,6 +363,15 @@ if ($_POST['form_save'] || $_REQUEST['receipt']) {
     " WHERE id = ?", array($tmprow['facility_id']) );
 
   // Now proceed with printing the receipt.
+$tot = sqlQuery("select sum(pay_amount) as tot from ar_activity where pid=?", array($form_pid));
+$fe = sqlQuery("select sum(fee) as fees from billing where pid=?", array($form_pid));
+$due = $fe['fees'] - ($_POST['form_paytotal'] + $_POST['tot_char']);
+$past_enc = sqlStatement("select encounter from payments where pid = ? and  dtime = ? and amount2 != '0.00'", array($form_pid,$timestamp));
+ $past_enc_date = array();
+ while($row = sqlFetchArray($past_enc))
+ {
+ array_push($past_enc_date, sqlQuery("select encounter,date from form_encounter where encounter=?",array($row['encounter'])));
+ }
 ?>
 
 <title><?php echo xlt('Receipt for Payment'); ?></title>
@@ -446,10 +457,37 @@ if ($_POST['form_save'] || $_REQUEST['receipt']) {
   <td><?php echo text(oeFormatMoney($payrow['amount2'])) ?></td>
  </tr>
  <tr>
+    <td><?php echo xlt('Total Charge'); ?>:</td>
+    <td><?php echo text($fe['fees']) ?></td>
+</tr>
+<tr>
+<td><?php echo xlt('Past Encounter and Date'); ?>:</td>
+<td><table border=1>
+<tr>
+<td><b><?php echo xlt('Past Encounter No.'); ?></b></td>
+<td><b><?php echo xlt('Past Encounter Date'); ?></b></td>
+<?php foreach($past_enc_date as $value) { ?>
+<tr>
+<td> <?php echo text($value['encounter']) ?> </td>
+<td> <?php echo text (oeFormatSDFT(strtotime($value['date']))) ?> </td>
+</tr>
+<?php } ?>
+</tr>
+</table></td>
+</tr>
+ <tr>
   <td><?php echo xlt('Received By'); ?>:</td>
   <td><?php echo text($payrow['user']) ?></td>
  </tr>
 </table>
+<tr>
+    <td><?php echo xlt('Total Amount Paid'); ?>:</td>
+    <td><?php echo text($_POST['form_paytotal'] + $_POST['tot_char']) ?></td>
+</tr>
+<tr>
+    <td><?php echo xlt('Due Amount'); ?>:</td>
+    <td><?php echo ($due)  ?></td>
+</tr>
 
 <div id='hideonprint'>
 <p>
@@ -1221,6 +1259,7 @@ function make_insurance()
   <td class="dehead" align="right">
    <input type='text' name='form_paytotal'  value=''
     style='color:#00aa00;width:50px' readonly  />
+   <input type="hidden" name="tot_char" id="tot_char" value=0 />
   </td>
  </tr>
 
@@ -1236,6 +1275,9 @@ function make_insurance()
 </form>
 <script language="JavaScript">
  calctotal();
+$(document).ready(function() {
+    $('#tot_char').val(<?php echo $tot_charges ?>);
+});
 </script>
 </center>
 </body>
