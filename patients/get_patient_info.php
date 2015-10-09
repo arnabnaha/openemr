@@ -1,3 +1,8 @@
+<html>
+<head>
+<title>Patient Information</title>
+</head>
+</html>
 <?php
  // Copyright (C) 2011 Cassian LUP <cassi.lup@gmail.com>
  //
