@@ -74,13 +74,11 @@ function upload_file_to_client($file_to_send) {
   // sleep one second to ensure there's no follow-on.
   sleep(1);
 }
-function upload_file_to_client_pdf($file_to_send, $aPatFirstName = '', $aPatID = null, $flagCFN = false) { //////
+function upload_file_to_client_pdf($file_to_send, $aPatFirstName = '', $aPatID = null, $flagCFN = false) {
 //Function reads a text file and converts to pdf.
-  ///////////////////
   $aPatFName = preg_replace("/[^A-Za-z]/", '', $aPatFirstName);
   if($flagCFN) $STMT_TEMP_FILE_PDF = $GLOBALS['temporary_files_dir'] . "/Stmt_{$aPatFName}_{$aPatID}.pdf";
   else global $STMT_TEMP_FILE_PDF;
-  ///////////////////
 
   $pdf =& new Cezpdf('LETTER');//pdf creation starts
   $pdf->ezSetMargins(36,0,36,0);
@@ -153,11 +151,9 @@ if ($INTEGRATED_AR) {
     $stmt = array();
     $stmt_count = 0;
 
-    ///////////////
     $flagT = true;
     $aPatientFirstName = '';
     $aPatientID = null;
-    ///////////////
 
     // This loops once for each invoice/encounter.
     //
@@ -166,13 +162,11 @@ if ($INTEGRATED_AR) {
       $duedate = $svcdate; // TBD?
       $duncount = $row['stmt_count'];
 
-      /////////////
       if($flagT) {
         $flagT = false;
         $aPatientFirstName = $row['fname'];
         $aPatientID = $row['pid'];
       }
-      /////////////
 
       // If this is a new patient then print the pending statement
       // and start a new one.  This is an associative array:
@@ -248,7 +242,7 @@ if ($INTEGRATED_AR) {
     if ($_POST['form_download']) {
       upload_file_to_client($STMT_TEMP_FILE);
     } elseif ($_POST['form_pdf']) {
-      upload_file_to_client_pdf($STMT_TEMP_FILE, $aPatientFirstName, $aPatientID, true); ////////
+      upload_file_to_client_pdf($STMT_TEMP_FILE, $aPatientFirstName, $aPatientID, true);
     } else { // Must be print!
       if ($DEBUG) {
         $alertmsg = xl("Printing skipped; see test output in") .' '. $STMT_TEMP_FILE;
