@@ -438,7 +438,7 @@ class C_Prescription extends Controller {
 				$pdf->ezText( xl('Signature') . ": ",12);
 				// $pdf->ezImage($sigfile, "", "", "none", "left");
 				$pdf->ezImage($sigfile, "", "", "none", "center");
-				$pdf->ezText( xl('Date') . ": " . date('Y-m-d'), 12);
+				$pdf->ezText( xl('Date') . ": " . date('d-M-Y'), 12);
 				if ( $this->is_print_to_fax ) {
 					$pdf->ezText(xl('Please do not accept this prescription unless it was received via facsimile.'));
 				}
@@ -455,13 +455,13 @@ class C_Prescription extends Controller {
 				return;
 			}
 		}
-		$pdf->ezText("\n\n" . xl('Signature') . ":________________________________\n" . xl('Date') . ": " . date('Y-m-d'),12);
+		$pdf->ezText("\n\n" . xl('Signature') . ":________________________________\n" . xl('Date') . ": " . date('d-M-Y'),12);
 	}
 
         function multiprintcss_footer() {
 	        echo ("<div class='signdiv'>\n");
                 echo (xl('Signature') . ":________________________________<br>");
-                echo (xl('Date') . ": " . date('Y-m-d'));
+                echo (xl('Date') . ": " . date('d-M-Y'));
 	        echo ("</div>\n");
                 echo ("</div>\n");
         }
@@ -570,8 +570,12 @@ class C_Prescription extends Controller {
 		}
 
 		$this->multiprint_footer($pdf);
-
-		$pdf->ezStream();
+///////////////////
+$pFirstName = $p->patient->fname;
+$pFName = preg_replace("/[^A-Za-z]/", '', $pFirstName);
+$modedFileName = "Rx_{$pFName}_{$p->patient->id}.pdf";
+///////////////////         
+		$pdf->ezStream(array('Content-Disposition' => $modedFileName)); ////////
 		return;
 	}
 
