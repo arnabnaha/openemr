@@ -27,13 +27,6 @@ $thisauth_write_addonly=FALSE;
 if ( acl_check('patients','med','',array('write','addonly') )) {
  $thisauth_write_addonly=TRUE;
 }
-
-/* perform a squad check for pages touching patients, if we're in 'athletic team' mode */
-if ($GLOBALS['athletic_team']!='false') {
-  $tmp = getPatientData($pid, 'squad');
-  if ($tmp['squad'] && ! acl_check('squads', $tmp['squad']))
-   die(text($form_name).': '.xlt("Access Denied"));
-}
 /* Use the formFetch function from api.inc to load the saved record */
 $xyzzy = formFetch($table_name, $_GET['id']);
 
@@ -129,7 +122,7 @@ $manual_layouts = array(
           'list_id' => '' )
  );
 
-$returnurl = $GLOBALS['concurrent_layout'] ? 'encounter_top.php' : 'patient_encounter.php';
+$returnurl = 'encounter_top.php';
 
 if ($xyzzy['last_enc'] != '') {
     $dateparts = split(' ', $xyzzy['last_enc']);
@@ -164,7 +157,7 @@ function chkdata_Txt(&$record, $var) {
 
 <!-- supporting javascript code -->
 <!-- for dialog -->
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js?v=<?php echo $v_js_includes; ?>"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/textformat.js"></script>
 
 <!-- Global Stylesheet -->

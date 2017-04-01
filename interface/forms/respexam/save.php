@@ -9,8 +9,6 @@ require_once('../../globals.php');
 require_once($GLOBALS['srcdir'].'/api.inc');
 /* for ??? */
 require_once($GLOBALS['srcdir'].'/forms.inc');
-/* for formDataCore() */
-require_once($GLOBALS['srcdir'].'/formdata.inc.php');
 
 /** CHANGE THIS - name of the database table associated with this form **/
 $table_name = 'form_respexam';
@@ -28,13 +26,6 @@ if (!acl_check('patients', 'med')) {
 $thisauth_write_addonly=FALSE;
 if ( acl_check('patients','med','',array('write','addonly') )) {
  $thisauth_write_addonly=TRUE;
-}
-
-/* perform a squad check for pages touching patients, if we're in 'athletic team' mode */
-if ($GLOBALS['athletic_team']!='false') {
-  $tmp = getPatientData($pid, 'squad');
-  if ($tmp['squad'] && ! acl_check('squads', $tmp['squad']))
-   die(text($form_name).': '.xlt("Access Denied"));
 }
 
 /* an array of all of the fields' names and their types. */

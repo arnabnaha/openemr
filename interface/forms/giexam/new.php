@@ -26,13 +26,6 @@ if ( acl_check('patients','med','',array('write','addonly') )) {
  $thisauth_write_addonly=TRUE;
 }
 
-/* perform a squad check for pages touching patients, if we're in 'athletic team' mode */
-if ($GLOBALS['athletic_team']!='false') {
-  $tmp = getPatientData($pid, 'squad');
-  if ($tmp['squad'] && ! acl_check('squads', $tmp['squad']))
-   die(text($form_name).': '.xlt("Access Denied"));
-}
-
 if (!$thisauth_write_addonly)
   die(text($form_name).': '.xlt("Adding is not authorized"));
 /* in order to use the layout engine's draw functions, we need a fake table of layout data. */
@@ -302,7 +295,7 @@ $manual_layouts = array(
  );
 $submiturl = $GLOBALS['rootdir'].'/forms/'.$form_folder.'/save.php?mode=new&amp;return=encounter';
 /* no get logic here */
-$returnurl = $GLOBALS['concurrent_layout'] ? 'encounter_top.php' : 'patient_encounter.php';
+$returnurl = 'encounter_top.php';
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -313,9 +306,9 @@ $returnurl = $GLOBALS['concurrent_layout'] ? 'encounter_top.php' : 'patient_enco
 
 <!-- supporting javascript code -->
 <!-- for dialog -->
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js?v=<?php echo $v_js_includes; ?>"></script>
 <!-- For jquery, required by the save and discard buttons. -->
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/js/jquery.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-1-2-1/index.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/textformat.js"></script>
 
 <!-- Global Stylesheet -->
