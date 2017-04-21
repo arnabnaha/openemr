@@ -184,16 +184,14 @@ function chkdata_Txt(&$record, $var) {
 <!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!--  generating 4 cells and calling --><td>
 <span class="fieldlabel"><?php xl('Date of Last Encounter','e'); ?>: </span>
 </td><td>
-   <input type='text' size='10' name='last_enc' id='last_enc'
+   <input type='text' size='10' class='datepicker' name='last_enc' id='last_enc'
     value="<?php $result=chkdata_Date($xyzzy,'last_enc'); echo $result; ?>"
-    />
 </td>
 <td>
 <span class="fieldlabel"><?php xl('Date of Follow up','e'); ?>: </span>
 </td><td>
-   <input type='text' size='10' name='date_visit' id='date_visit'
+   <input type='text' size='10' class='datepicker' name='date_visit' id='date_visit'
     value="<?php $result=chkdata_Date($xyzzy,'date_visit'); echo $result; ?>"
-    />
 </td>
 <!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
 <!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!-- generating not($fields[$checked+1]) and calling last --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Last Encounter Number','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['enc_number'], $xyzzy['enc_number']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Reason for follow up','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['reason_follow'], $xyzzy['reason_follow']); ?></td><!-- called consumeRows 424--> <!-- Exiting not($fields) and generating 0 empty fields --></tr>
@@ -207,9 +205,8 @@ function chkdata_Txt(&$record, $var) {
 <!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!-- generating not($fields[$checked+1]) and calling last --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Appointment Done','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['app_done'], $xyzzy['app_done']); ?></td><td>
 <span class="fieldlabel"><?php xl('Next Visit Date','e'); ?>: </span>
 </td><td>
-   <input type='text' size='10' name='app_date' id='app_date'
+   <input type='text' size='10' class='datepicker' name='app_date' id='app_date'
     value="<?php $result=chkdata_Date($xyzzy,'app_date'); echo $result; ?>"
-    />
 </td>
 <!-- called consumeRows 424--> <!-- Exiting not($fields) and generating 0 empty fields --></tr>
 </table></div>

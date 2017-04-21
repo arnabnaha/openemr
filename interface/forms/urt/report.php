@@ -116,7 +116,17 @@ $lists = array();
     $data = formFetch($table_name, $id);
     if ($data) {
 
-        echo '<table><tr>';
+        if (isset($GLOBALS['PATIENT_REPORT_ACTIVE']) && ! empty($_POST['pdf'])) { // PDF Print
+            $td_style = "<td style='width:24%'><span class='bold'>";
+            echo '<table style="width:775px;"><tr>';
+        } elseif (isset($GLOBALS['PATIENT_REPORT_ACTIVE']) && empty($_POST['pdf'])) { // Patient report view/search and printable
+            $cols = 4;
+            $td_style = "<td><span class='bold'>";
+            echo '<table style="width:775px;"><tr>';
+        } else { // Okay an encounter view.
+            $td_style = "<td><span class='bold'>";
+            echo '<table><tr>';
+        }
 
         foreach($data as $key => $value) {
 
@@ -142,7 +152,7 @@ $lists = array();
               $value = $dateparts[0];
             }
 
-	    echo "<td><span class='bold'>";
+	    echo $td_style;
             
 
             if ($key == 'inspect_gen' ) 

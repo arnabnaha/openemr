@@ -237,9 +237,8 @@ function chkdata_Txt(&$record, $var) {
 <!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!--  generating 4 cells and calling --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Patient Name','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['pts_name'], $xyzzy['pts_name']); ?></td><td>
 <span class="fieldlabel"><?php xl('Date of Visit','e'); ?>: </span>
 </td><td>
-   <input type='text' size='10' name='gens_date' id='gens_date'
+   <input type='text' size='10' class='datepicker' name='gens_date' id='gens_date'
     value="<?php $result=chkdata_Date($xyzzy,'gens_date'); echo $result; ?>"
-    />
 </td>
 <!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
 <!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!-- generating not($fields[$checked+1]) and calling last --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Age','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['genu_age'], $xyzzy['genu_age']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Examined By','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['geny_examined'], $xyzzy['geny_examined']); ?></td><!-- called consumeRows 424--> <!-- Exiting not($fields) and generating 0 empty fields --></tr>

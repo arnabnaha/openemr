@@ -147,9 +147,8 @@ function chkdata_Txt(&$record, $var) {
 <!-- called consumeRows 014--> <!--  generating 4 cells and calling --><td>
 <span class="fieldlabel"><?php xl('Date','e'); ?>: </span>
 </td><td>
-   <input type='text' size='10' name='contact_date' id='contact_date' title='Date contact occured/was attempted'
+   <input type='text' size='10' class='datepicker' name='contact_date' id='contact_date' title='Date contact occured/was attempted'
     value="<?php $result=chkdata_Date($xyzzy,'contact_date'); echo $result; ?>"
-    />
 </td>
 <!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
 <!-- called consumeRows 014--> <!--  generating 4 cells and calling --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Name','e').':'; ?></td><td class='text data' colspan='3'><?php echo generate_form_field($manual_layouts['contact_name'], $xyzzy['contact_name']); ?></td><!--  generating empties --><td class='emptycell' colspan='1'></td></tr>

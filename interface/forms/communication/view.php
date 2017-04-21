@@ -135,8 +135,8 @@ function chkdata_Txt(&$record, $var) {
 <!-- for dialog -->
 <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js?v=<?php echo $v_js_includes; ?>"></script>
 <!-- For jquery, required by the save, discard, and print buttons. -->
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-1-2-1/index.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/textformat.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-3-1-1/index.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/textformat.js?v=<?php echo $v_js_includes; ?>"></script>
 
 <!-- Global Stylesheet -->
 <link rel="stylesheet" href="<?php echo $css_header; ?>" type="text/css"/>
@@ -144,10 +144,8 @@ function chkdata_Txt(&$record, $var) {
 <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css"/>
 
 <!-- supporting code for the pop up calendar(date picker) -->
-<style type="text/css">@import url(<?php echo $GLOBALS['webroot']; ?>/library/dynarch_calendar.css);</style>
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dynarch_calendar.js"></script>
-<?php include_once("{$GLOBALS['srcdir']}/dynarch_calendar_en.inc.php"); ?>
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dynarch_calendar_setup.js"></script>
+<link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-datetimepicker-2-5-4/build/jquery.datetimepicker.min.css">
+<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-datetimepicker-2-5-4/build/jquery.datetimepicker.full.min.js"></script>
 
 
 <script type="text/javascript">
@@ -172,7 +170,7 @@ function PrintForm() {
 </a>
 </div>
 
-<form method="post" action="<?php echo $submiturl; ?>" id="<?php echo $form_folder; ?>"> 
+<form method="post" action="<?php echo $submiturl; ?>" id="<?php echo $form_folder; ?>">
 
 <!-- Save/Cancel buttons -->
 <div id="top_buttons" class="top_buttons">
@@ -193,15 +191,8 @@ function PrintForm() {
 <!-- called consumeRows 014--> <!--  generating 4 cells and calling --><td>
 <span class="fieldlabel"><?php xl('Date','e'); ?> (yyyy-mm-dd): </span>
 </td><td>
-   <input type='text' size='10' name='contact_date' id='contact_date' title='Date contact occured/was attempted'
+   <input type='text' size='10' class='datepicker' name='contact_date' id='contact_date' title='Date contact occured/was attempted'
     value="<?php $result=chkdata_Date($xyzzy,'contact_date'); echo $result; ?>"
-    onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)' />
-   <img src='../../pic/show_calendar.gif' width='24' height='22'
-    id='img_contact_date' alt='[?]' style='cursor:pointer'
-    title="<?php xl('Click here to choose a date','e'); ?>" />
-<script type="text/javascript">
-Calendar.setup({inputField:'contact_date', ifFormat:'%Y-%m-%d', button:'img_contact_date'});
-</script>
 </td>
 <!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
 <!-- called consumeRows 014--> <!--  generating 4 cells and calling --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Name','e').':'; ?></td><td class='text data' colspan='3'><?php echo generate_form_field($manual_layouts['contact_name'], $xyzzy['contact_name']); ?></td><!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
@@ -235,7 +226,7 @@ $(document).ready(function(){
     $(".save").click(function() { top.restoreSession(); document.forms["<?php echo $form_folder; ?>"].submit(); });
     $(".dontsave").click(function() { location.href='<?php echo $returnurl; ?>'; });
     $(".print").click(function() { PrintForm(); });
-    
+
     $(".sectionlabel input").click( function() {
     	var section = $(this).attr("data-section");
 		if ( $(this).attr('checked' ) ) {
@@ -247,6 +238,21 @@ $(document).ready(function(){
 
     $(".sectionlabel input").attr( 'checked', 'checked' );
     $(".section").show();
+
+    $('.datepicker').datetimepicker({
+        <?php $datetimepicker_timepicker = false; ?>
+        <?php $datetimepicker_showseconds = false; ?>
+        <?php $datetimepicker_formatInput = false; ?>
+        <?php require($GLOBALS['srcdir'] . '/js/xl/jquery-datetimepicker-2-5-4.js.php'); ?>
+        <?php // can add any additional javascript settings to datetimepicker here; need to prepend first setting with a comma ?>
+    });
+    $('.datetimepicker').datetimepicker({
+        <?php $datetimepicker_timepicker = true; ?>
+        <?php $datetimepicker_showseconds = false; ?>
+        <?php $datetimepicker_formatInput = false; ?>
+        <?php require($GLOBALS['srcdir'] . '/js/xl/jquery-datetimepicker-2-5-4.js.php'); ?>
+        <?php // can add any additional javascript settings to datetimepicker here; need to prepend first setting with a comma ?>
+    });
 });
 </script>
 </body>

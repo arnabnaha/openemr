@@ -241,9 +241,8 @@ function chkdata_Txt(&$record, $var) {
 <!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!--  generating 4 cells and calling --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Patient Name','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['pt_name'], $xyzzy['pt_name']); ?></td><td>
 <span class="fieldlabel"><?php xl('Date of Visit','e'); ?>: </span>
 </td><td>
-   <input type='text' size='10' name='date_visit' id='date_visit'
+   <input type='text' size='10' class='datepicker' name='date_visit' id='date_visit'
     value="<?php $result=chkdata_Date($xyzzy,'date_visit'); echo $result; ?>"
-    />
 </td>
 <!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
 <!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!--  generating 4 cells and calling --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Age','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['pt_age'], $xyzzy['pt_age']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Respondent','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['pt_respo'], $xyzzy['pt_respo']); ?></td><!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
@@ -271,9 +270,8 @@ function chkdata_Txt(&$record, $var) {
 <!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!--  generating 4 cells and calling --><td>
 <span class="fieldlabel"><?php xl('Follow up date','e'); ?>: </span>
 </td><td>
-   <input type='text' size='10' name='follow_date' id='follow_date'
+   <input type='text' size='10' class='datepicker' name='follow_date' id='follow_date'
     value="<?php $result=chkdata_Date($xyzzy,'follow_date'); echo $result; ?>"
-    />
 </td>
 <td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Referral Needed','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['ref_need'], $xyzzy['ref_need']); ?></td><!--  generating empties --><td class='emptycell' colspan='1'></td></tr>
 <!-- called consumeRows 014--> <!-- just calling --><!-- called consumeRows 224--> <!-- generating not($fields[$checked+1]) and calling last --><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Referred to','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['ref_name'], $xyzzy['ref_name']); ?></td><td class='fieldlabel' colspan='1'><?php echo xl_layout_label('Referral Speciality','e').':'; ?></td><td class='text data' colspan='1'><?php echo generate_form_field($manual_layouts['ref_doc'], $xyzzy['ref_doc']); ?></td><!-- called consumeRows 424--> <!-- Exiting not($fields) and generating 0 empty fields --></tr>
