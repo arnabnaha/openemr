@@ -4,11 +4,13 @@
  */
 
 /* for $GLOBALS[], ?? */
-require_once('../../globals.php');
-/* for acl_check(), ?? */
+require_once(dirname(__FILE__).'/../../globals.php');
 require_once($GLOBALS['srcdir'].'/api.inc');
 /* for generate_display_field() */
 require_once($GLOBALS['srcdir'].'/options.inc.php');
+
+use OpenEMR\Common\Acl\AclMain;
+
 /* The name of the function is significant and must match the folder name */
 function giexam_report( $pid, $encounter, $cols, $id) {
     $count = 0;
@@ -18,263 +20,263 @@ $table_name = 'form_giexam';
 
 /* an array of all of the fields' names and their types. */
 $field_names = array('abd_upper' => 'textfield','abd_shape' => 'textfield','abd_flanks' => 'dropdown_list','abd_umbi' => 'textfield','abd_scar' => 'dropdown_list','abd_vein' => 'dropdown_list','abd_movm' => 'textfield','abd_puls' => 'dropdown_list','abd_peris' => 'dropdown_list','abd_lump' => 'textfield','abd_parotid' => 'textfield','abd_spider' => 'textfield','abd_hernia' => 'textfield','abd_hair' => 'textfield','abd_genetalia' => 'textfield','abd_temp' => 'textfield','abd_tender' => 'textfield','abd_vflow' => 'textfield','abd_feel' => 'textfield','abd_loclump' => 'textfield','abd_girth' => 'textfield','abd_oedema' => 'dropdown_list','abd_fthrill' => 'dropdown_list','abd_liver' => 'textarea','abd_gb' => 'textarea','abd_spleen' => 'textarea','abd_kidney' => 'textarea','abd_nodes' => 'textfield','abd_tone' => 'textfield','abd_sdull' => 'textfield','abd_traube' => 'textfield','abd_psound' => 'textfield','abd_splash' => 'dropdown_list','abd_bruit' => 'dropdown_list','abd_spbruit' => 'dropdown_list','abd_cbruit' => 'dropdown_list','abd_auper' => 'textfield','abd_vnhum' => 'textfield','abd_epigast' => 'textfield');/* in order to use the layout engine's draw functions, we need a fake table of layout data. */
-$manual_layouts = array( 
- 'abd_upper' => 
+$manual_layouts = array(
+ 'abd_upper' =>
    array( 'field_id' => 'abd_upper',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_shape' => 
+ 'abd_shape' =>
    array( 'field_id' => 'abd_shape',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_flanks' => 
+ 'abd_flanks' =>
    array( 'field_id' => 'abd_flanks',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'flank_cond' ),
- 'abd_umbi' => 
+ 'abd_umbi' =>
    array( 'field_id' => 'abd_umbi',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_scar' => 
+ 'abd_scar' =>
    array( 'field_id' => 'abd_scar',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_vein' => 
+ 'abd_vein' =>
    array( 'field_id' => 'abd_vein',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_movm' => 
+ 'abd_movm' =>
    array( 'field_id' => 'abd_movm',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_puls' => 
+ 'abd_puls' =>
    array( 'field_id' => 'abd_puls',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_peris' => 
+ 'abd_peris' =>
    array( 'field_id' => 'abd_peris',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_lump' => 
+ 'abd_lump' =>
    array( 'field_id' => 'abd_lump',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_parotid' => 
+ 'abd_parotid' =>
    array( 'field_id' => 'abd_parotid',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_spider' => 
+ 'abd_spider' =>
    array( 'field_id' => 'abd_spider',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_hernia' => 
+ 'abd_hernia' =>
    array( 'field_id' => 'abd_hernia',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_hair' => 
+ 'abd_hair' =>
    array( 'field_id' => 'abd_hair',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_genetalia' => 
+ 'abd_genetalia' =>
    array( 'field_id' => 'abd_genetalia',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_temp' => 
+ 'abd_temp' =>
    array( 'field_id' => 'abd_temp',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_tender' => 
+ 'abd_tender' =>
    array( 'field_id' => 'abd_tender',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_vflow' => 
+ 'abd_vflow' =>
    array( 'field_id' => 'abd_vflow',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_feel' => 
+ 'abd_feel' =>
    array( 'field_id' => 'abd_feel',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_loclump' => 
+ 'abd_loclump' =>
    array( 'field_id' => 'abd_loclump',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_girth' => 
+ 'abd_girth' =>
    array( 'field_id' => 'abd_girth',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_oedema' => 
+ 'abd_oedema' =>
    array( 'field_id' => 'abd_oedema',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_fthrill' => 
+ 'abd_fthrill' =>
    array( 'field_id' => 'abd_fthrill',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_liver' => 
+ 'abd_liver' =>
    array( 'field_id' => 'abd_liver',
           'data_type' => '3',
           'fld_length' => '75',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'abd_gb' => 
+ 'abd_gb' =>
    array( 'field_id' => 'abd_gb',
           'data_type' => '3',
           'fld_length' => '75',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'abd_spleen' => 
+ 'abd_spleen' =>
    array( 'field_id' => 'abd_spleen',
           'data_type' => '3',
           'fld_length' => '75',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'abd_kidney' => 
+ 'abd_kidney' =>
    array( 'field_id' => 'abd_kidney',
           'data_type' => '3',
           'fld_length' => '75',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'abd_nodes' => 
+ 'abd_nodes' =>
    array( 'field_id' => 'abd_nodes',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_tone' => 
+ 'abd_tone' =>
    array( 'field_id' => 'abd_tone',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_sdull' => 
+ 'abd_sdull' =>
    array( 'field_id' => 'abd_sdull',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_traube' => 
+ 'abd_traube' =>
    array( 'field_id' => 'abd_traube',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_psound' => 
+ 'abd_psound' =>
    array( 'field_id' => 'abd_psound',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_splash' => 
+ 'abd_splash' =>
    array( 'field_id' => 'abd_splash',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_bruit' => 
+ 'abd_bruit' =>
    array( 'field_id' => 'abd_bruit',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_spbruit' => 
+ 'abd_spbruit' =>
    array( 'field_id' => 'abd_spbruit',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_cbruit' => 
+ 'abd_cbruit' =>
    array( 'field_id' => 'abd_cbruit',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_auper' => 
+ 'abd_auper' =>
    array( 'field_id' => 'abd_auper',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_vnhum' => 
+ 'abd_vnhum' =>
    array( 'field_id' => 'abd_vnhum',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_epigast' => 
+ 'abd_epigast' =>
    array( 'field_id' => 'abd_epigast',
           'data_type' => '2',
           'fld_length' => '30',
@@ -303,7 +305,7 @@ $lists = array();
 
             if ($key == 'id' || $key == 'pid' || $key == 'user' ||
                 $key == 'groupname' || $key == 'authorized' ||
-                $key == 'activity' || $key == 'date' || 
+                $key == 'activity' || $key == 'date' ||
                 $value == '' || $value == '0000-00-00 00:00:00' ||
                 $value == 'n')
             {
@@ -319,205 +321,205 @@ $lists = array();
             /* remove the time-of-day from the 'date' fields. */
             if ($field_names[$key] == 'date')
             if ($value != '') {
-              $dateparts = split(' ', $value);
+              $dateparts = explode(' ', $value);
               $value = $dateparts[0];
             }
 
 	    echo $td_style;
-            
 
-            if ($key == 'abd_upper' ) 
-            { 
+
+            if ($key == 'abd_upper' )
+            {
                 echo xl_layout_label('Upper GI').":";
             }
 
-            if ($key == 'abd_shape' ) 
-            { 
+            if ($key == 'abd_shape' )
+            {
                 echo xl_layout_label('Shape of Abdomen').":";
             }
 
-            if ($key == 'abd_flanks' ) 
-            { 
+            if ($key == 'abd_flanks' )
+            {
                 echo xl_layout_label('Flanks').":";
             }
 
-            if ($key == 'abd_umbi' ) 
-            { 
+            if ($key == 'abd_umbi' )
+            {
                 echo xl_layout_label('Umbilicus').":";
             }
 
-            if ($key == 'abd_scar' ) 
-            { 
+            if ($key == 'abd_scar' )
+            {
                 echo xl_layout_label('Any Scars').":";
             }
 
-            if ($key == 'abd_vein' ) 
-            { 
+            if ($key == 'abd_vein' )
+            {
                 echo xl_layout_label('Venous Prominenece').":";
             }
 
-            if ($key == 'abd_movm' ) 
-            { 
+            if ($key == 'abd_movm' )
+            {
                 echo xl_layout_label('Abdominal Movement').":";
             }
 
-            if ($key == 'abd_puls' ) 
-            { 
+            if ($key == 'abd_puls' )
+            {
                 echo xl_layout_label('Any Pulsation').":";
             }
 
-            if ($key == 'abd_peris' ) 
-            { 
+            if ($key == 'abd_peris' )
+            {
                 echo xl_layout_label('Peristalsis').":";
             }
 
-            if ($key == 'abd_lump' ) 
-            { 
+            if ($key == 'abd_lump' )
+            {
                 echo xl_layout_label('Any obvious lump').":";
             }
 
-            if ($key == 'abd_parotid' ) 
-            { 
+            if ($key == 'abd_parotid' )
+            {
                 echo xl_layout_label('Parotid Swelling').":";
             }
 
-            if ($key == 'abd_spider' ) 
-            { 
+            if ($key == 'abd_spider' )
+            {
                 echo xl_layout_label('Any Spider naevi').":";
             }
 
-            if ($key == 'abd_hernia' ) 
-            { 
+            if ($key == 'abd_hernia' )
+            {
                 echo xl_layout_label('Hernial sites').":";
             }
 
-            if ($key == 'abd_hair' ) 
-            { 
+            if ($key == 'abd_hair' )
+            {
                 echo xl_layout_label('Body hairs and Pubic Hair').":";
             }
 
-            if ($key == 'abd_genetalia' ) 
-            { 
+            if ($key == 'abd_genetalia' )
+            {
                 echo xl_layout_label('Genetalia').":";
             }
 
-            if ($key == 'abd_temp' ) 
-            { 
+            if ($key == 'abd_temp' )
+            {
                 echo xl_layout_label('Superficial temperature').":";
             }
 
-            if ($key == 'abd_tender' ) 
-            { 
+            if ($key == 'abd_tender' )
+            {
                 echo xl_layout_label('Superficial Tenderness').":";
             }
 
-            if ($key == 'abd_vflow' ) 
-            { 
+            if ($key == 'abd_vflow' )
+            {
                 echo xl_layout_label('Venous flow').":";
             }
 
-            if ($key == 'abd_feel' ) 
-            { 
+            if ($key == 'abd_feel' )
+            {
                 echo xl_layout_label('Feel of Abdomen').":";
             }
 
-            if ($key == 'abd_loclump' ) 
-            { 
+            if ($key == 'abd_loclump' )
+            {
                 echo xl_layout_label('Localised Lump').":";
             }
 
-            if ($key == 'abd_girth' ) 
-            { 
+            if ($key == 'abd_girth' )
+            {
                 echo xl_layout_label('Abdominal Girth').":";
             }
 
-            if ($key == 'abd_oedema' ) 
-            { 
+            if ($key == 'abd_oedema' )
+            {
                 echo xl_layout_label('Parietal Oedema').":";
             }
 
-            if ($key == 'abd_fthrill' ) 
-            { 
+            if ($key == 'abd_fthrill' )
+            {
                 echo xl_layout_label('Fluid Thrill').":";
             }
 
-            if ($key == 'abd_liver' ) 
-            { 
+            if ($key == 'abd_liver' )
+            {
                 echo xl_layout_label('Liver').":";
             }
 
-            if ($key == 'abd_gb' ) 
-            { 
+            if ($key == 'abd_gb' )
+            {
                 echo xl_layout_label('Gall Bladder').":";
             }
 
-            if ($key == 'abd_spleen' ) 
-            { 
+            if ($key == 'abd_spleen' )
+            {
                 echo xl_layout_label('Spleen').":";
             }
 
-            if ($key == 'abd_kidney' ) 
-            { 
+            if ($key == 'abd_kidney' )
+            {
                 echo xl_layout_label('kidney').":";
             }
 
-            if ($key == 'abd_nodes' ) 
-            { 
+            if ($key == 'abd_nodes' )
+            {
                 echo xl_layout_label('Pre and Para Aortic Nodes').":";
             }
 
-            if ($key == 'abd_tone' ) 
-            { 
+            if ($key == 'abd_tone' )
+            {
                 echo xl_layout_label('General Percussion Note').":";
             }
 
-            if ($key == 'abd_sdull' ) 
-            { 
+            if ($key == 'abd_sdull' )
+            {
                 echo xl_layout_label('Sgifting dullness').":";
             }
 
-            if ($key == 'abd_traube' ) 
-            { 
+            if ($key == 'abd_traube' )
+            {
                 echo xl_layout_label('Traube space percussion').":";
             }
 
-            if ($key == 'abd_psound' ) 
-            { 
+            if ($key == 'abd_psound' )
+            {
                 echo xl_layout_label('Peristaltic sound').":";
             }
 
-            if ($key == 'abd_splash' ) 
-            { 
+            if ($key == 'abd_splash' )
+            {
                 echo xl_layout_label('Succussion Splash').":";
             }
 
-            if ($key == 'abd_bruit' ) 
-            { 
+            if ($key == 'abd_bruit' )
+            {
                 echo xl_layout_label('Hepatic bruit').":";
             }
 
-            if ($key == 'abd_spbruit' ) 
-            { 
+            if ($key == 'abd_spbruit' )
+            {
                 echo xl_layout_label('Splenic bruit').":";
             }
 
-            if ($key == 'abd_cbruit' ) 
-            { 
+            if ($key == 'abd_cbruit' )
+            {
                 echo xl_layout_label('Carotid bruit').":";
             }
 
-            if ($key == 'abd_auper' ) 
-            { 
+            if ($key == 'abd_auper' )
+            {
                 echo xl_layout_label('Auscultopercussion').":";
             }
 
-            if ($key == 'abd_vnhum' ) 
-            { 
+            if ($key == 'abd_vnhum' )
+            {
                 echo xl_layout_label('venous Hum').":";
             }
 
-            if ($key == 'abd_epigast' ) 
-            { 
+            if ($key == 'abd_epigast' )
+            {
                 echo xl_layout_label('Epigastrium Auscultation').":";
             }
 

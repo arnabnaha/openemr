@@ -5,10 +5,11 @@
 
 /* for $GLOBALS[], ?? */
 require_once('../../globals.php');
-/* for acl_check(), ?? */
 require_once($GLOBALS['srcdir'].'/api.inc');
 /* for ??? */
 require_once($GLOBALS['srcdir'].'/forms.inc');
+
+use OpenEMR\Common\Acl\AclMain;
 
 /** CHANGE THIS - name of the database table associated with this form **/
 $table_name = 'form_giexam';
@@ -20,11 +21,11 @@ $form_name = 'GI Examination';
 $form_folder = 'giexam';
 
 /* Check the access control lists to ensure permissions to this page */
-if (!acl_check('patients', 'med')) {
+if (!AclMain::aclCheckCore('patients', 'med')) {
  die(text($form_name).': '.xlt("Access Denied"));
 }
 $thisauth_write_addonly=FALSE;
-if ( acl_check('patients','med','',array('write','addonly') )) {
+if ( AclMain::aclCheckCore('patients','med','',array('write','addonly') )) {
  $thisauth_write_addonly=TRUE;
 }
 
@@ -108,7 +109,7 @@ foreach($field_names as $key=>$val)
 
 /* escape form data for entry to the database. */
 foreach ($field_names as $k => $var) {
-  $field_names[$k] = formDataCore($var);
+  $field_names[$k] = add_escape_custom($var);
 }
 
 if ($encounter == '') $encounter = date('Ymd');
@@ -136,11 +137,9 @@ elseif ($_GET['mode'] == 'update') {
 
     /* update the data in the form's table */
     $success = formUpdate($table_name, $field_names, $_GET['id'], $userauthorized);
-    /* sqlInsert('update '.$table_name." set pid = {".$_SESSION['pid']."},groupname='".$_SESSION['authProvider']."',user='".$_SESSION['authUser']."',authorized=$userauthorized,activity=1,date = NOW(), where id=$id"); */
+    /* sqlStatement('update '.$table_name." set pid = {".$_SESSION['pid']."},groupname='".$_SESSION['authProvider']."',user='".$_SESSION['authUser']."',authorized=$userauthorized,activity=1,date = NOW(), where id=$id"); */
 }
 
-
-$_SESSION['encounter'] = $encounter;
 
 formHeader('Redirecting....');
 /* defaults to the encounters page. */

@@ -5,11 +5,13 @@
 
 /* for $GLOBALS[], ?? */
 require_once('../../globals.php');
-/* for acl_check(), ?? */
 require_once($GLOBALS['srcdir'].'/api.inc');
 /* for generate_form_field, ?? */
 require_once($GLOBALS['srcdir'].'/options.inc.php');
 /* note that we cannot include options_listadd.inc here, as it generates code before the <html> tag */
+
+use OpenEMR\Common\Acl\AclMain;
+use OpenEMR\Core\Header;
 
 /** CHANGE THIS name to the name of your form. **/
 $form_name = 'Investigation Orders';
@@ -18,86 +20,86 @@ $form_name = 'Investigation Orders';
 $form_folder = 'labs';
 
 /* Check the access control lists to ensure permissions to this page */
-if (!acl_check('patients', 'med')) {
+if (!AclMain::aclCheckCore('patients', 'med')) {
  die(text($form_name).': '.xlt("Access Denied"));
 }
 $thisauth_write_addonly=FALSE;
-if ( acl_check('patients','med','',array('write','addonly') )) {
+if ( AclMain::aclCheckCore('patients','med','',array('write','addonly') )) {
  $thisauth_write_addonly=TRUE;
 }
 
 if (!$thisauth_write_addonly)
   die(text($form_name).': '.xlt("Adding is not authorized"));
 /* in order to use the layout engine's draw functions, we need a fake table of layout data. */
-$manual_layouts = array( 
- 'blood_one' => 
+$manual_layouts = array(
+ 'blood_one' =>
    array( 'field_id' => 'blood_one',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Blood_Investigations' ),
- 'blood_two' => 
+ 'blood_two' =>
    array( 'field_id' => 'blood_two',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Blood_Investigations' ),
- 'blood_three' => 
+ 'blood_three' =>
    array( 'field_id' => 'blood_three',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Blood_Investigations' ),
- 'blood_four' => 
+ 'blood_four' =>
    array( 'field_id' => 'blood_four',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Blood_Investigations' ),
- 'blood_five' => 
+ 'blood_five' =>
    array( 'field_id' => 'blood_five',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Blood_Investigations' ),
- 'radio_one' => 
+ 'radio_one' =>
    array( 'field_id' => 'radio_one',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Radiology_Investigations' ),
- 'radio_two' => 
+ 'radio_two' =>
    array( 'field_id' => 'radio_two',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Radiology_Investigations' ),
- 'radio_three' => 
+ 'radio_three' =>
    array( 'field_id' => 'radio_three',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Radiology_Investigations' ),
- 'radio_four' => 
+ 'radio_four' =>
    array( 'field_id' => 'radio_four',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Radiology_Investigations' ),
- 'radio_five' => 
+ 'radio_five' =>
    array( 'field_id' => 'radio_five',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Radiology_Investigations' ),
- 'date_report' => 
+ 'date_report' =>
    array( 'field_id' => 'date_report',
           'data_type' => '2',
           'fld_length' => '20',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'report_upload' => 
+ 'report_upload' =>
    array( 'field_id' => 'report_upload',
           'data_type' => '1',
           'fld_length' => '0',
@@ -106,32 +108,20 @@ $manual_layouts = array(
  );
 $submiturl = $GLOBALS['rootdir'].'/forms/'.$form_folder.'/save.php?mode=new&amp;return=encounter';
 /* no get logic here */
-$returnurl = 'encounter_top.php';
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 
 <!-- declare this document as being encoded in UTF-8 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" ></meta>
 
-<!-- supporting javascript code -->
-<!-- for dialog -->
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js?v=<?php echo $v_js_includes; ?>"></script>
-<!-- For jquery, required by the save and discard buttons. -->
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-3-1-1/index.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/textformat.js?v=<?php echo $v_js_includes; ?>"></script>
-
-<!-- Global Stylesheet -->
-<link rel="stylesheet" href="<?php echo $css_header; ?>" type="text/css"/>
+<!-- assets -->
+<?php Header::setupHeader('datetime-picker'); ?>
 <!-- Form Specific Stylesheet. -->
-<link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css"/>
+<link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css">
 
-<!-- pop up calendar -->
-<link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-datetimepicker-2-5-4/build/jquery.datetimepicker.min.css">
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-datetimepicker-2-5-4/build/jquery.datetimepicker.full.min.js"></script>
-
-<script type="text/javascript">
+<script>
 // this line is to assist the calendar text boxes
 var mypcc = '<?php echo $GLOBALS['phone_country_code']; ?>';
 
@@ -159,7 +149,7 @@ function submitme() {
 <body class="body_top">
 
 <div id="title">
-<a href="<?php echo $returnurl; ?>" onclick="top.restoreSession()">
+<a href="<?php echo $GLOBALS['form_exit_url']; ?>" onclick="top.restoreSession()">
 <span class="title"><?php xl($form_name,'e'); ?></span>
 <span class="back">(<?php xl('Back','e'); ?>)</span>
 </a>
@@ -210,12 +200,12 @@ function submitme() {
 </fieldset>
 </div><!-- end bottom_buttons -->
 </form>
-<script type="text/javascript">
+<script>
 // jQuery stuff to make the page a little easier to use
 
-$(document).ready(function(){
+$(function () {
     $(".save").click(function() { top.restoreSession(); document.forms["<?php echo $form_folder; ?>"].submit(); });
-    $(".dontsave").click(function() { location.href='<?php echo "$rootdir/patient_file/encounter/$returnurl"; ?>'; });
+    $(".dontsave").click(function() { location.href='parent.closeTab(window.name, false)'; });
 
 	$(".sectionlabel input").click( function() {
     	var section = $(this).attr("data-section");

@@ -5,11 +5,13 @@
 
 /* for $GLOBALS[], ?? */
 require_once('../../globals.php');
-/* for acl_check(), ?? */
 require_once($GLOBALS['srcdir'].'/api.inc');
 /* for generate_form_field, ?? */
 require_once($GLOBALS['srcdir'].'/options.inc.php');
 /* note that we cannot include options_listadd.inc here, as it generates code before the <html> tag */
+
+use OpenEMR\Common\Acl\AclMain;
+use OpenEMR\Core\Header;
 
 /** CHANGE THIS name to the name of your form. **/
 $form_name = 'Respiratory Examination';
@@ -18,164 +20,164 @@ $form_name = 'Respiratory Examination';
 $form_folder = 'respexam';
 
 /* Check the access control lists to ensure permissions to this page */
-if (!acl_check('patients', 'med')) {
+if (!AclMain::aclCheckCore('patients', 'med')) {
  die(text($form_name).': '.xlt("Access Denied"));
 }
 $thisauth_write_addonly=FALSE;
-if ( acl_check('patients','med','',array('write','addonly') )) {
+if ( AclMain::aclCheckCore('patients','med','',array('write','addonly') )) {
  $thisauth_write_addonly=TRUE;
 }
 
 if (!$thisauth_write_addonly)
   die(text($form_name).': '.xlt("Adding is not authorized"));
 /* in order to use the layout engine's draw functions, we need a fake table of layout data. */
-$manual_layouts = array( 
- 'chest_shape' => 
+$manual_layouts = array(
+ 'chest_shape' =>
    array( 'field_id' => 'chest_shape',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'chest_scar' => 
+ 'chest_scar' =>
    array( 'field_id' => 'chest_scar',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'ven_prom' => 
+ 'ven_prom' =>
    array( 'field_id' => 'ven_prom',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'sym_mov' => 
+ 'sym_mov' =>
    array( 'field_id' => 'sym_mov',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'drop_shoulder' => 
+ 'drop_shoulder' =>
    array( 'field_id' => 'drop_shoulder',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'chest_suck' => 
+ 'chest_suck' =>
    array( 'field_id' => 'chest_suck',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'chest_full' => 
+ 'chest_full' =>
    array( 'field_id' => 'chest_full',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'trac_shift' => 
+ 'trac_shift' =>
    array( 'field_id' => 'trac_shift',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'apex_beat' => 
+ 'apex_beat' =>
    array( 'field_id' => 'apex_beat',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'full_insp' => 
+ 'full_insp' =>
    array( 'field_id' => 'full_insp',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'full_exp' => 
+ 'full_exp' =>
    array( 'field_id' => 'full_exp',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'chest_movement' => 
+ 'chest_movement' =>
    array( 'field_id' => 'chest_movement',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'voc_fremitus' => 
+ 'voc_fremitus' =>
    array( 'field_id' => 'voc_fremitus',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'per_front' => 
+ 'per_front' =>
    array( 'field_id' => 'per_front',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'per_axilla' => 
+ 'per_axilla' =>
    array( 'field_id' => 'per_axilla',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'per_back' => 
+ 'per_back' =>
    array( 'field_id' => 'per_back',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'per_apex' => 
+ 'per_apex' =>
    array( 'field_id' => 'per_apex',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'per_clavicle' => 
+ 'per_clavicle' =>
    array( 'field_id' => 'per_clavicle',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'per_sternum' => 
+ 'per_sternum' =>
    array( 'field_id' => 'per_sternum',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'voc_resonanace' => 
+ 'voc_resonanace' =>
    array( 'field_id' => 'voc_resonanace',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'breath_sound' => 
+ 'breath_sound' =>
    array( 'field_id' => 'breath_sound',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'ad_sound' => 
+ 'ad_sound' =>
    array( 'field_id' => 'ad_sound',
           'data_type' => '2',
           'fld_length' => '30',
@@ -185,32 +187,20 @@ $manual_layouts = array(
  );
 $submiturl = $GLOBALS['rootdir'].'/forms/'.$form_folder.'/save.php?mode=new&amp;return=encounter';
 /* no get logic here */
-$returnurl = 'encounter_top.php';
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 
 <!-- declare this document as being encoded in UTF-8 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" ></meta>
 
-<!-- supporting javascript code -->
-<!-- for dialog -->
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js?v=<?php echo $v_js_includes; ?>"></script>
-<!-- For jquery, required by the save and discard buttons. -->
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-3-1-1/index.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/textformat.js?v=<?php echo $v_js_includes; ?>"></script>
-
-<!-- Global Stylesheet -->
-<link rel="stylesheet" href="<?php echo $css_header; ?>" type="text/css"/>
+<!-- assets -->
+<?php Header::setupHeader('datetime-picker'); ?>
 <!-- Form Specific Stylesheet. -->
-<link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css"/>
+<link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css">
 
-<!-- pop up calendar -->
-<link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-datetimepicker-2-5-4/build/jquery.datetimepicker.min.css">
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-datetimepicker-2-5-4/build/jquery.datetimepicker.full.min.js"></script>
-
-<script type="text/javascript">
+<script>
 // this line is to assist the calendar text boxes
 var mypcc = '<?php echo $GLOBALS['phone_country_code']; ?>';
 
@@ -238,7 +228,7 @@ function submitme() {
 <body class="body_top">
 
 <div id="title">
-<a href="<?php echo $returnurl; ?>" onclick="top.restoreSession()">
+<a href="<?php echo $GLOBALS['form_exit_url']; ?>" onclick="top.restoreSession()">
 <span class="title"><?php xl($form_name,'e'); ?></span>
 <span class="back">(<?php xl('Back','e'); ?>)</span>
 </a>
@@ -297,12 +287,12 @@ function submitme() {
 </fieldset>
 </div><!-- end bottom_buttons -->
 </form>
-<script type="text/javascript">
+<script>
 // jQuery stuff to make the page a little easier to use
 
-$(document).ready(function(){
+$(function () {
     $(".save").click(function() { top.restoreSession(); document.forms["<?php echo $form_folder; ?>"].submit(); });
-    $(".dontsave").click(function() { location.href='<?php echo "$rootdir/patient_file/encounter/$returnurl"; ?>'; });
+    $(".dontsave").click(function() { location.href='parent.closeTab(window.name, false)'; });
 
 	$(".sectionlabel input").click( function() {
     	var section = $(this).attr("data-section");

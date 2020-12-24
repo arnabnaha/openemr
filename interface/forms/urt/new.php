@@ -5,11 +5,13 @@
 
 /* for $GLOBALS[], ?? */
 require_once('../../globals.php');
-/* for acl_check(), ?? */
 require_once($GLOBALS['srcdir'].'/api.inc');
 /* for generate_form_field, ?? */
 require_once($GLOBALS['srcdir'].'/options.inc.php');
 /* note that we cannot include options_listadd.inc here, as it generates code before the <html> tag */
+
+use OpenEMR\Common\Acl\AclMain;
+use OpenEMR\Core\Header;
 
 /** CHANGE THIS name to the name of your form. **/
 $form_name = 'Upper Respiratory Tract Examination';
@@ -18,103 +20,103 @@ $form_name = 'Upper Respiratory Tract Examination';
 $form_folder = 'urt';
 
 /* Check the access control lists to ensure permissions to this page */
-if (!acl_check('patients', 'med')) {
+if (!AclMain::aclCheckCore('patients', 'med')) {
  die(text($form_name).': '.xlt("Access Denied"));
 }
 $thisauth_write_addonly=FALSE;
-if ( acl_check('patients','med','',array('write','addonly') )) {
+if ( AclMain::aclCheckCore('patients','med','',array('write','addonly') )) {
  $thisauth_write_addonly=TRUE;
 }
 
 if (!$thisauth_write_addonly)
   die(text($form_name).': '.xlt("Adding is not authorized"));
 /* in order to use the layout engine's draw functions, we need a fake table of layout data. */
-$manual_layouts = array( 
- 'inspect_gen' => 
+$manual_layouts = array(
+ 'inspect_gen' =>
    array( 'field_id' => 'inspect_gen',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_lip' => 
+ 'inspect_lip' =>
    array( 'field_id' => 'inspect_lip',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_teeth' => 
+ 'inspect_teeth' =>
    array( 'field_id' => 'inspect_teeth',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_tongue' => 
+ 'inspect_tongue' =>
    array( 'field_id' => 'inspect_tongue',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_oral' => 
+ 'inspect_oral' =>
    array( 'field_id' => 'inspect_oral',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_posterior' => 
+ 'inspect_posterior' =>
    array( 'field_id' => 'inspect_posterior',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_tonsil' => 
+ 'inspect_tonsil' =>
    array( 'field_id' => 'inspect_tonsil',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_gum' => 
+ 'inspect_gum' =>
    array( 'field_id' => 'inspect_gum',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_vestibule' => 
+ 'inspect_vestibule' =>
    array( 'field_id' => 'inspect_vestibule',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_uvula' => 
+ 'inspect_uvula' =>
    array( 'field_id' => 'inspect_uvula',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'palp_glands' => 
+ 'palp_glands' =>
    array( 'field_id' => 'palp_glands',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'palp_neck' => 
+ 'palp_neck' =>
    array( 'field_id' => 'palp_neck',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'palp_extra' => 
+ 'palp_extra' =>
    array( 'field_id' => 'palp_extra',
           'data_type' => '3',
           'fld_length' => '10',
@@ -124,32 +126,20 @@ $manual_layouts = array(
  );
 $submiturl = $GLOBALS['rootdir'].'/forms/'.$form_folder.'/save.php?mode=new&amp;return=encounter';
 /* no get logic here */
-$returnurl = 'encounter_top.php';
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 
 <!-- declare this document as being encoded in UTF-8 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" ></meta>
 
-<!-- supporting javascript code -->
-<!-- for dialog -->
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js?v=<?php echo $v_js_includes; ?>"></script>
-<!-- For jquery, required by the save and discard buttons. -->
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-3-1-1/index.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/textformat.js?v=<?php echo $v_js_includes; ?>"></script>
-
-<!-- Global Stylesheet -->
-<link rel="stylesheet" href="<?php echo $css_header; ?>" type="text/css"/>
+<!-- assets -->
+<?php Header::setupHeader('datetime-picker'); ?>
 <!-- Form Specific Stylesheet. -->
-<link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css"/>
+<link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css">
 
-<!-- pop up calendar -->
-<link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-datetimepicker-2-5-4/build/jquery.datetimepicker.min.css">
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-datetimepicker-2-5-4/build/jquery.datetimepicker.full.min.js"></script>
-
-<script type="text/javascript">
+<script>
 // this line is to assist the calendar text boxes
 var mypcc = '<?php echo $GLOBALS['phone_country_code']; ?>';
 
@@ -177,7 +167,7 @@ function submitme() {
 <body class="body_top">
 
 <div id="title">
-<a href="<?php echo $returnurl; ?>" onclick="top.restoreSession()">
+<a href="<?php echo $GLOBALS['form_exit_url']; ?>" onclick="top.restoreSession()">
 <span class="title"><?php xl($form_name,'e'); ?></span>
 <span class="back">(<?php xl('Back','e'); ?>)</span>
 </a>
@@ -225,12 +215,12 @@ function submitme() {
 </fieldset>
 </div><!-- end bottom_buttons -->
 </form>
-<script type="text/javascript">
+<script>
 // jQuery stuff to make the page a little easier to use
 
-$(document).ready(function(){
+$(function () {
     $(".save").click(function() { top.restoreSession(); document.forms["<?php echo $form_folder; ?>"].submit(); });
-    $(".dontsave").click(function() { location.href='<?php echo "$rootdir/patient_file/encounter/$returnurl"; ?>'; });
+    $(".dontsave").click(function() { location.href='parent.closeTab(window.name, false)'; });
 
 	$(".sectionlabel input").click( function() {
     	var section = $(this).attr("data-section");

@@ -5,11 +5,13 @@
 
 /* for $GLOBALS[], ?? */
 require_once('../../globals.php');
-/* for acl_check(), ?? */
 require_once($GLOBALS['srcdir'].'/api.inc');
 /* for generate_form_field, ?? */
 require_once($GLOBALS['srcdir'].'/options.inc.php');
 /* note that we cannot include options_listadd.inc here, as it generates code before the <html> tag */
+
+use OpenEMR\Common\Acl\AclMain;
+use OpenEMR\Core\Header;
 
 /** CHANGE THIS - name of the database table associated with this form **/
 $table_name = 'form_gensurvey';
@@ -21,11 +23,11 @@ $form_name = 'General Survey';
 $form_folder = 'gensurvey';
 
 /* Check the access control lists to ensure permissions to this page */
-if (!acl_check('patients', 'med')) {
+if (!AclMain::aclCheckCore('patients', 'med')) {
  die(text($form_name).': '.xlt("Access Denied"));
 }
 $thisauth_write_addonly=FALSE;
-if ( acl_check('patients','med','',array('write','addonly') )) {
+if ( AclMain::aclCheckCore('patients','med','',array('write','addonly') )) {
  $thisauth_write_addonly=TRUE;
 }
 
@@ -35,150 +37,150 @@ if (!$thisauth_write_addonly)
 $xyzzy = formFetch($table_name, $_GET['id']);
 
 /* in order to use the layout engine's draw functions, we need a fake table of layout data. */
-$manual_layouts = array( 
- 'pts_name' => 
+$manual_layouts = array(
+ 'pts_name' =>
    array( 'field_id' => 'pts_name',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'gens_date' => 
+ 'gens_date' =>
    array( 'field_id' => 'gens_date',
           'data_type' => '4',
           'fld_length' => '0',
           'description' => '',
           'list_id' => '' ),
- 'genu_age' => 
+ 'genu_age' =>
    array( 'field_id' => 'genu_age',
           'data_type' => '2',
           'fld_length' => '10',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'geny_examined' => 
+ 'geny_examined' =>
    array( 'field_id' => 'geny_examined',
           'data_type' => '10',
           'fld_length' => '0',
           'description' => '',
           'list_id' => '' ),
- 'genr_higher' => 
+ 'genr_higher' =>
    array( 'field_id' => 'genr_higher',
           'data_type' => '2',
           'fld_length' => '10',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'fc_facies' => 
+ 'fc_facies' =>
    array( 'field_id' => 'fc_facies',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'bu_build' => 
+ 'bu_build' =>
    array( 'field_id' => 'bu_build',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'build_list' ),
- 'nu_nutri' => 
+ 'nu_nutri' =>
    array( 'field_id' => 'nu_nutri',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'decu_gen' => 
+ 'decu_gen' =>
    array( 'field_id' => 'decu_gen',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'decubitus_list' ),
- 'sur_pal' => 
+ 'sur_pal' =>
    array( 'field_id' => 'sur_pal',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'cya_cyanosis' => 
+ 'cya_cyanosis' =>
    array( 'field_id' => 'cya_cyanosis',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'cl_clubbing' => 
+ 'cl_clubbing' =>
    array( 'field_id' => 'cl_clubbing',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'gr_clubgrade' => 
+ 'gr_clubgrade' =>
    array( 'field_id' => 'gr_clubgrade',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'clubbing_grades' ),
- 'ic_icterus' => 
+ 'ic_icterus' =>
    array( 'field_id' => 'ic_icterus',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'oe_oedema' => 
+ 'oe_oedema' =>
    array( 'field_id' => 'oe_oedema',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'loc_locoedema' => 
+ 'loc_locoedema' =>
    array( 'field_id' => 'loc_locoedema',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'oedema_location' ),
- 'vit_vitals' => 
+ 'vit_vitals' =>
    array( 'field_id' => 'vit_vitals',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'yesno' ),
- 'no_node' => 
+ 'no_node' =>
    array( 'field_id' => 'no_node',
           'data_type' => '2',
           'fld_length' => '10',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'ne_vein' => 
+ 'ne_vein' =>
    array( 'field_id' => 'ne_vein',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'sk_skin' => 
+ 'sk_skin' =>
    array( 'field_id' => 'sk_skin',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'sku_skull' => 
+ 'sku_skull' =>
    array( 'field_id' => 'sku_skull',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'ex_extra' => 
+ 'ex_extra' =>
    array( 'field_id' => 'ex_extra',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'imp_impression' => 
+ 'imp_impression' =>
    array( 'field_id' => 'imp_impression',
           'data_type' => '2',
           'fld_length' => '50',
@@ -195,12 +197,12 @@ if ($_GET['mode']) {
 }
 else
 {
- $returnurl = 'encounter_top.php';
+ $returnurl = $GLOBALS['form_exit_url'];
 }
 
 /* remove the time-of-day from all date fields */
 if ($xyzzy['gens_date'] != '') {
-    $dateparts = split(' ', $xyzzy['gens_date']);
+    $dateparts = explode(' ', $xyzzy['gens_date']);
     $xyzzy['gens_date'] = $dateparts[0];
 }
 
@@ -214,31 +216,19 @@ function chkdata_Txt(&$record, $var) {
         return htmlspecialchars($record{"$var"},ENT_QUOTES);
 }
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 
 <!-- declare this document as being encoded in UTF-8 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" ></meta>
 
-<!-- supporting javascript code -->
-<!-- for dialog -->
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js?v=<?php echo $v_js_includes; ?>"></script>
-<!-- For jquery, required by the save, discard, and print buttons. -->
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-3-1-1/index.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/textformat.js?v=<?php echo $v_js_includes; ?>"></script>
-
-<!-- Global Stylesheet -->
-<link rel="stylesheet" href="<?php echo $css_header; ?>" type="text/css"/>
+<!-- assets -->
+<?php Header::setupHeader('datetime-picker'); ?>
 <!-- Form Specific Stylesheet. -->
-<link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css"/>
+<link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css">
 
-<!-- supporting code for the pop up calendar(date picker) -->
-<link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-datetimepicker-2-5-4/build/jquery.datetimepicker.min.css">
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-datetimepicker-2-5-4/build/jquery.datetimepicker.full.min.js"></script>
-
-
-<script type="text/javascript">
+<script>
 // this line is to assist the calendar text boxes
 var mypcc = '<?php echo $GLOBALS['phone_country_code']; ?>';
 
@@ -315,14 +305,19 @@ function PrintForm() {
 </fieldset>
 </div><!-- end bottom_buttons -->
 </form>
-<script type="text/javascript">
+<script>
 // jQuery stuff to make the page a little easier to use
 
-$(document).ready(function(){
+$(function () {
     $(".save").click(function() { top.restoreSession(); document.forms["<?php echo $form_folder; ?>"].submit(); });
-    $(".dontsave").click(function() { location.href='<?php echo $returnurl; ?>'; });
-    $(".print").click(function() { PrintForm(); });
 
+<?php if ($returnurl == 'show.php') { ?>
+    $(".dontsave").click(function() { location.href='<?php echo $returnurl; ?>'; });
+<?php } else { ?>
+    $(".dontsave").click(function() { parent.closeTab(window.name, false); });
+<?php } ?>
+
+    $(".print").click(function() { PrintForm(); });
     $(".sectionlabel input").click( function() {
     	var section = $(this).attr("data-section");
 		if ( $(this).attr('checked' ) ) {

@@ -5,10 +5,12 @@
 
 /* for $GLOBALS[], ?? */
 require_once('../../globals.php');
-/* for acl_check(), ?? */
 require_once($GLOBALS['srcdir'].'/api.inc');
 /* for display_layout_rows(), ?? */
 require_once($GLOBALS['srcdir'].'/options.inc.php');
+
+use OpenEMR\Common\Acl\AclMain;
+use OpenEMR\Core\Header;
 
 /** CHANGE THIS - name of the database table associated with this form **/
 $table_name = 'form_giexam';
@@ -20,274 +22,274 @@ $form_name = 'GI Examination';
 $form_folder = 'giexam';
 
 /* Check the access control lists to ensure permissions to this page */
-if (!acl_check('patients', 'med')) {
+if (!AclMain::aclCheckCore('patients', 'med')) {
  die(text($form_name).': '.xlt("Access Denied"));
 }
 $thisauth_write_addonly=FALSE;
-if ( acl_check('patients','med','',array('write','addonly') )) {
+if ( AclMain::aclCheckCore('patients','med','',array('write','addonly') )) {
  $thisauth_write_addonly=TRUE;
 }
 /* Use the formFetch function from api.inc to load the saved record */
 $xyzzy = formFetch($table_name, $_GET['id']);
 
 /* in order to use the layout engine's draw functions, we need a fake table of layout data. */
-$manual_layouts = array( 
- 'abd_upper' => 
+$manual_layouts = array(
+ 'abd_upper' =>
    array( 'field_id' => 'abd_upper',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_shape' => 
+ 'abd_shape' =>
    array( 'field_id' => 'abd_shape',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_flanks' => 
+ 'abd_flanks' =>
    array( 'field_id' => 'abd_flanks',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'flank_cond' ),
- 'abd_umbi' => 
+ 'abd_umbi' =>
    array( 'field_id' => 'abd_umbi',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_scar' => 
+ 'abd_scar' =>
    array( 'field_id' => 'abd_scar',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_vein' => 
+ 'abd_vein' =>
    array( 'field_id' => 'abd_vein',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_movm' => 
+ 'abd_movm' =>
    array( 'field_id' => 'abd_movm',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_puls' => 
+ 'abd_puls' =>
    array( 'field_id' => 'abd_puls',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_peris' => 
+ 'abd_peris' =>
    array( 'field_id' => 'abd_peris',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_lump' => 
+ 'abd_lump' =>
    array( 'field_id' => 'abd_lump',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_parotid' => 
+ 'abd_parotid' =>
    array( 'field_id' => 'abd_parotid',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_spider' => 
+ 'abd_spider' =>
    array( 'field_id' => 'abd_spider',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_hernia' => 
+ 'abd_hernia' =>
    array( 'field_id' => 'abd_hernia',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_hair' => 
+ 'abd_hair' =>
    array( 'field_id' => 'abd_hair',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_genetalia' => 
+ 'abd_genetalia' =>
    array( 'field_id' => 'abd_genetalia',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_temp' => 
+ 'abd_temp' =>
    array( 'field_id' => 'abd_temp',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_tender' => 
+ 'abd_tender' =>
    array( 'field_id' => 'abd_tender',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_vflow' => 
+ 'abd_vflow' =>
    array( 'field_id' => 'abd_vflow',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_feel' => 
+ 'abd_feel' =>
    array( 'field_id' => 'abd_feel',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_loclump' => 
+ 'abd_loclump' =>
    array( 'field_id' => 'abd_loclump',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_girth' => 
+ 'abd_girth' =>
    array( 'field_id' => 'abd_girth',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_oedema' => 
+ 'abd_oedema' =>
    array( 'field_id' => 'abd_oedema',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_fthrill' => 
+ 'abd_fthrill' =>
    array( 'field_id' => 'abd_fthrill',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_liver' => 
+ 'abd_liver' =>
    array( 'field_id' => 'abd_liver',
           'data_type' => '3',
           'fld_length' => '75',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'abd_gb' => 
+ 'abd_gb' =>
    array( 'field_id' => 'abd_gb',
           'data_type' => '3',
           'fld_length' => '75',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'abd_spleen' => 
+ 'abd_spleen' =>
    array( 'field_id' => 'abd_spleen',
           'data_type' => '3',
           'fld_length' => '75',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'abd_kidney' => 
+ 'abd_kidney' =>
    array( 'field_id' => 'abd_kidney',
           'data_type' => '3',
           'fld_length' => '75',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'abd_nodes' => 
+ 'abd_nodes' =>
    array( 'field_id' => 'abd_nodes',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_tone' => 
+ 'abd_tone' =>
    array( 'field_id' => 'abd_tone',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_sdull' => 
+ 'abd_sdull' =>
    array( 'field_id' => 'abd_sdull',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_traube' => 
+ 'abd_traube' =>
    array( 'field_id' => 'abd_traube',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_psound' => 
+ 'abd_psound' =>
    array( 'field_id' => 'abd_psound',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_splash' => 
+ 'abd_splash' =>
    array( 'field_id' => 'abd_splash',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_bruit' => 
+ 'abd_bruit' =>
    array( 'field_id' => 'abd_bruit',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_spbruit' => 
+ 'abd_spbruit' =>
    array( 'field_id' => 'abd_spbruit',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_cbruit' => 
+ 'abd_cbruit' =>
    array( 'field_id' => 'abd_cbruit',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'present_absent' ),
- 'abd_auper' => 
+ 'abd_auper' =>
    array( 'field_id' => 'abd_auper',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_vnhum' => 
+ 'abd_vnhum' =>
    array( 'field_id' => 'abd_vnhum',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'abd_epigast' => 
+ 'abd_epigast' =>
    array( 'field_id' => 'abd_epigast',
           'data_type' => '2',
           'fld_length' => '30',
@@ -307,26 +309,19 @@ function chkdata_Txt(&$record, $var) {
         return htmlspecialchars($record{"$var"},ENT_QUOTES);
 }
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 
 <!-- declare this document as being encoded in UTF-8 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" ></meta>
 
-<!-- supporting javascript code -->
-<!-- for dialog -->
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js?v=<?php echo $v_js_includes; ?>"></script>
-<!-- For jquery, required by edit, print, and delete buttons. -->
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-1-2-1/index.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/textformat.js"></script>
-
-<!-- Global Stylesheet -->
-<link rel="stylesheet" href="<?php echo $css_header; ?>" type="text/css"/>
+<!-- assets -->
+<?php Header::setupHeader(); ?>
 <!-- Form Specific Stylesheet. -->
-<link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css"/>
+<link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css">
 
-<script type="text/javascript">
+<script>
 
 <!-- FIXME: this needs to detect access method, and construct a URL appropriately! -->
 function PrintForm() {
@@ -395,10 +390,10 @@ function PrintForm() {
 </div><!-- end button_bar -->
 
 </form>
-<script type="text/javascript">
+<script>
 // jQuery stuff to make the page a little easier to use
 
-$(document).ready(function(){
+$(function () {
     $(".print").click(function() { PrintForm(); });
 });
 </script>

@@ -4,11 +4,13 @@
  */
 
 /* for $GLOBALS[], ?? */
-require_once('../../globals.php');
-/* for acl_check(), ?? */
+require_once(dirname(__FILE__).'/../../globals.php');
 require_once($GLOBALS['srcdir'].'/api.inc');
 /* for generate_display_field() */
 require_once($GLOBALS['srcdir'].'/options.inc.php');
+
+use OpenEMR\Common\Acl\AclMain;
+
 /* The name of the function is significant and must match the folder name */
 function history_report( $pid, $encounter, $cols, $id) {
     $count = 0;
@@ -18,151 +20,151 @@ $table_name = 'form_history';
 
 /* an array of all of the fields' names and their types. */
 $field_names = array('pt_name' => 'textfield','date_visit' => 'date','pt_age' => 'textfield','pt_respo' => 'dropdown_list','pt_rel' => 'dropdown_list','pt_dem' => 'dropdown_list','ch_comp' => 'textarea','pr_his' => 'textarea','past_his' => 'textarea','sleep' => 'textfield','appetite' => 'textfield','addiction' => 'dropdown_list','bowel_habit' => 'textfield','bladder_habit' => 'textfield','fam_his' => 'checkbox_list','soc_his' => 'checkbox_list','trt_his' => 'textarea','next_visit' => 'dropdown_list','app_done' => 'dropdown_list','follow_date' => 'date','ref_need' => 'dropdown_list','ref_name' => 'textfield','ref_doc' => 'dropdown_list');/* in order to use the layout engine's draw functions, we need a fake table of layout data. */
-$manual_layouts = array( 
- 'pt_name' => 
+$manual_layouts = array(
+ 'pt_name' =>
    array( 'field_id' => 'pt_name',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'date_visit' => 
+ 'date_visit' =>
    array( 'field_id' => 'date_visit',
           'data_type' => '4',
           'fld_length' => '0',
           'description' => '',
           'list_id' => '' ),
- 'pt_age' => 
+ 'pt_age' =>
    array( 'field_id' => 'pt_age',
           'data_type' => '2',
           'fld_length' => '10',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'pt_respo' => 
+ 'pt_respo' =>
    array( 'field_id' => 'pt_respo',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Respondent' ),
- 'pt_rel' => 
+ 'pt_rel' =>
    array( 'field_id' => 'pt_rel',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Relationship_list' ),
- 'pt_dem' => 
+ 'pt_dem' =>
    array( 'field_id' => 'pt_dem',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'yesno' ),
- 'ch_comp' => 
+ 'ch_comp' =>
    array( 'field_id' => 'ch_comp',
           'data_type' => '3',
           'fld_length' => '50',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'pr_his' => 
+ 'pr_his' =>
    array( 'field_id' => 'pr_his',
           'data_type' => '3',
           'fld_length' => '50',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'past_his' => 
+ 'past_his' =>
    array( 'field_id' => 'past_his',
           'data_type' => '3',
           'fld_length' => '50',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'sleep' => 
+ 'sleep' =>
    array( 'field_id' => 'sleep',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'appetite' => 
+ 'appetite' =>
    array( 'field_id' => 'appetite',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'addiction' => 
+ 'addiction' =>
    array( 'field_id' => 'addiction',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'addiction_status' ),
- 'bowel_habit' => 
+ 'bowel_habit' =>
    array( 'field_id' => 'bowel_habit',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'bladder_habit' => 
+ 'bladder_habit' =>
    array( 'field_id' => 'bladder_habit',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'fam_his' => 
+ 'fam_his' =>
    array( 'field_id' => 'fam_his',
           'data_type' => '21',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'hist_take' ),
- 'soc_his' => 
+ 'soc_his' =>
    array( 'field_id' => 'soc_his',
           'data_type' => '21',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'hist_take' ),
- 'trt_his' => 
+ 'trt_his' =>
    array( 'field_id' => 'trt_his',
           'data_type' => '3',
           'fld_length' => '60',
           'max_length' => '4',
           'description' => '',
           'list_id' => '' ),
- 'next_visit' => 
+ 'next_visit' =>
    array( 'field_id' => 'next_visit',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'yesno' ),
- 'app_done' => 
+ 'app_done' =>
    array( 'field_id' => 'app_done',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'yesno' ),
- 'follow_date' => 
+ 'follow_date' =>
    array( 'field_id' => 'follow_date',
           'data_type' => '4',
           'fld_length' => '0',
           'description' => '',
           'list_id' => '' ),
- 'ref_need' => 
+ 'ref_need' =>
    array( 'field_id' => 'ref_need',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'yesno' ),
- 'ref_name' => 
+ 'ref_name' =>
    array( 'field_id' => 'ref_name',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'ref_doc' => 
+ 'ref_doc' =>
    array( 'field_id' => 'ref_doc',
           'data_type' => '1',
           'fld_length' => '0',
@@ -190,7 +192,7 @@ $lists = array();
 
             if ($key == 'id' || $key == 'pid' || $key == 'user' ||
                 $key == 'groupname' || $key == 'authorized' ||
-                $key == 'activity' || $key == 'date' || 
+                $key == 'activity' || $key == 'date' ||
                 $value == '' || $value == '0000-00-00 00:00:00' ||
                 $value == 'n')
             {
@@ -206,125 +208,125 @@ $lists = array();
             /* remove the time-of-day from the 'date' fields. */
             if ($field_names[$key] == 'date')
             if ($value != '') {
-              $dateparts = split(' ', $value);
+              $dateparts = explode(' ', $value);
               $value = $dateparts[0];
             }
 
 	    echo $td_style;
-            
 
-            if ($key == 'pt_name' ) 
-            { 
+
+            if ($key == 'pt_name' )
+            {
                 echo xl_layout_label('Patient Name').":";
             }
 
-            if ($key == 'date_visit' ) 
-            { 
+            if ($key == 'date_visit' )
+            {
                 echo xl_layout_label('Date of Visit').":";
             }
 
-            if ($key == 'pt_age' ) 
-            { 
+            if ($key == 'pt_age' )
+            {
                 echo xl_layout_label('Age').":";
             }
 
-            if ($key == 'pt_respo' ) 
-            { 
+            if ($key == 'pt_respo' )
+            {
                 echo xl_layout_label('Respondent').":";
             }
 
-            if ($key == 'pt_rel' ) 
-            { 
+            if ($key == 'pt_rel' )
+            {
                 echo xl_layout_label('Relation to Patient').":";
             }
 
-            if ($key == 'pt_dem' ) 
-            { 
+            if ($key == 'pt_dem' )
+            {
                 echo xl_layout_label('Demographics Complete').":";
             }
 
-            if ($key == 'ch_comp' ) 
-            { 
+            if ($key == 'ch_comp' )
+            {
                 echo xl_layout_label('Chief Complaints').":";
             }
 
-            if ($key == 'pr_his' ) 
-            { 
+            if ($key == 'pr_his' )
+            {
                 echo xl_layout_label('Present History').":";
             }
 
-            if ($key == 'past_his' ) 
-            { 
+            if ($key == 'past_his' )
+            {
                 echo xl_layout_label('Past History').":";
             }
 
-            if ($key == 'sleep' ) 
-            { 
+            if ($key == 'sleep' )
+            {
                 echo xl_layout_label('Sleep').":";
             }
 
-            if ($key == 'appetite' ) 
-            { 
+            if ($key == 'appetite' )
+            {
                 echo xl_layout_label('Appetite').":";
             }
 
-            if ($key == 'addiction' ) 
-            { 
+            if ($key == 'addiction' )
+            {
                 echo xl_layout_label('Addiction').":";
             }
 
-            if ($key == 'bowel_habit' ) 
-            { 
+            if ($key == 'bowel_habit' )
+            {
                 echo xl_layout_label('Bowel Habit').":";
             }
 
-            if ($key == 'bladder_habit' ) 
-            { 
+            if ($key == 'bladder_habit' )
+            {
                 echo xl_layout_label('Bladder Habit').":";
             }
 
-            if ($key == 'fam_his' ) 
-            { 
+            if ($key == 'fam_his' )
+            {
                 echo xl_layout_label('Family History').":";
             }
 
-            if ($key == 'soc_his' ) 
-            { 
+            if ($key == 'soc_his' )
+            {
                 echo xl_layout_label('Socioeconomic History').":";
             }
 
-            if ($key == 'trt_his' ) 
-            { 
+            if ($key == 'trt_his' )
+            {
                 echo xl_layout_label('Treatment History').":";
             }
 
-            if ($key == 'next_visit' ) 
-            { 
+            if ($key == 'next_visit' )
+            {
                 echo xl_layout_label('Follow Up Needed').":";
             }
 
-            if ($key == 'app_done' ) 
-            { 
+            if ($key == 'app_done' )
+            {
                 echo xl_layout_label('Appointment Done').":";
             }
 
-            if ($key == 'follow_date' ) 
-            { 
+            if ($key == 'follow_date' )
+            {
                 echo xl_layout_label('Follow up date').":";
             }
 
-            if ($key == 'ref_need' ) 
-            { 
+            if ($key == 'ref_need' )
+            {
                 echo xl_layout_label('Referral Needed').":";
             }
 
-            if ($key == 'ref_name' ) 
-            { 
+            if ($key == 'ref_name' )
+            {
                 echo xl_layout_label('Referred to').":";
             }
 
-            if ($key == 'ref_doc' ) 
-            { 
+            if ($key == 'ref_doc' )
+            {
                 echo xl_layout_label('Referral Speciality').":";
             }
 

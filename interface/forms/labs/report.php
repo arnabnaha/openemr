@@ -4,11 +4,13 @@
  */
 
 /* for $GLOBALS[], ?? */
-require_once('../../globals.php');
-/* for acl_check(), ?? */
+require_once(dirname(__FILE__).'/../../globals.php');
 require_once($GLOBALS['srcdir'].'/api.inc');
 /* for generate_display_field() */
 require_once($GLOBALS['srcdir'].'/options.inc.php');
+
+use OpenEMR\Common\Acl\AclMain;
+
 /* The name of the function is significant and must match the folder name */
 function labs_report( $pid, $encounter, $cols, $id) {
     $count = 0;
@@ -18,75 +20,75 @@ $table_name = 'form_labs';
 
 /* an array of all of the fields' names and their types. */
 $field_names = array('blood_one' => 'dropdown_list','blood_two' => 'dropdown_list','blood_three' => 'dropdown_list','blood_four' => 'dropdown_list','blood_five' => 'dropdown_list','radio_one' => 'dropdown_list','radio_two' => 'dropdown_list','radio_three' => 'dropdown_list','radio_four' => 'dropdown_list','radio_five' => 'dropdown_list','date_report' => 'textfield','report_upload' => 'dropdown_list');/* in order to use the layout engine's draw functions, we need a fake table of layout data. */
-$manual_layouts = array( 
- 'blood_one' => 
+$manual_layouts = array(
+ 'blood_one' =>
    array( 'field_id' => 'blood_one',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Blood_Investigations' ),
- 'blood_two' => 
+ 'blood_two' =>
    array( 'field_id' => 'blood_two',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Blood_Investigations' ),
- 'blood_three' => 
+ 'blood_three' =>
    array( 'field_id' => 'blood_three',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Blood_Investigations' ),
- 'blood_four' => 
+ 'blood_four' =>
    array( 'field_id' => 'blood_four',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Blood_Investigations' ),
- 'blood_five' => 
+ 'blood_five' =>
    array( 'field_id' => 'blood_five',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Blood_Investigations' ),
- 'radio_one' => 
+ 'radio_one' =>
    array( 'field_id' => 'radio_one',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Radiology_Investigations' ),
- 'radio_two' => 
+ 'radio_two' =>
    array( 'field_id' => 'radio_two',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Radiology_Investigations' ),
- 'radio_three' => 
+ 'radio_three' =>
    array( 'field_id' => 'radio_three',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Radiology_Investigations' ),
- 'radio_four' => 
+ 'radio_four' =>
    array( 'field_id' => 'radio_four',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Radiology_Investigations' ),
- 'radio_five' => 
+ 'radio_five' =>
    array( 'field_id' => 'radio_five',
           'data_type' => '1',
           'fld_length' => '0',
           'description' => '',
           'list_id' => 'Radiology_Investigations' ),
- 'date_report' => 
+ 'date_report' =>
    array( 'field_id' => 'date_report',
           'data_type' => '2',
           'fld_length' => '20',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'report_upload' => 
+ 'report_upload' =>
    array( 'field_id' => 'report_upload',
           'data_type' => '1',
           'fld_length' => '0',
@@ -114,7 +116,7 @@ $lists = array();
 
             if ($key == 'id' || $key == 'pid' || $key == 'user' ||
                 $key == 'groupname' || $key == 'authorized' ||
-                $key == 'activity' || $key == 'date' || 
+                $key == 'activity' || $key == 'date' ||
                 $value == '' || $value == '0000-00-00 00:00:00' ||
                 $value == 'n')
             {
@@ -130,70 +132,70 @@ $lists = array();
             /* remove the time-of-day from the 'date' fields. */
             if ($field_names[$key] == 'date')
             if ($value != '') {
-              $dateparts = split(' ', $value);
+              $dateparts = explode(' ', $value);
               $value = $dateparts[0];
             }
 
 	    echo $td_style;
-            
 
-            if ($key == 'blood_one' ) 
-            { 
+
+            if ($key == 'blood_one' )
+            {
                 echo xl_layout_label('1.').":";
             }
 
-            if ($key == 'blood_two' ) 
-            { 
+            if ($key == 'blood_two' )
+            {
                 echo xl_layout_label('2.').":";
             }
 
-            if ($key == 'blood_three' ) 
-            { 
+            if ($key == 'blood_three' )
+            {
                 echo xl_layout_label('3.').":";
             }
 
-            if ($key == 'blood_four' ) 
-            { 
+            if ($key == 'blood_four' )
+            {
                 echo xl_layout_label('4.').":";
             }
 
-            if ($key == 'blood_five' ) 
-            { 
+            if ($key == 'blood_five' )
+            {
                 echo xl_layout_label('5.').":";
             }
 
-            if ($key == 'radio_one' ) 
-            { 
+            if ($key == 'radio_one' )
+            {
                 echo xl_layout_label('1.').":";
             }
 
-            if ($key == 'radio_two' ) 
-            { 
+            if ($key == 'radio_two' )
+            {
                 echo xl_layout_label('2.').":";
             }
 
-            if ($key == 'radio_three' ) 
-            { 
+            if ($key == 'radio_three' )
+            {
                 echo xl_layout_label('3.').":";
             }
 
-            if ($key == 'radio_four' ) 
-            { 
+            if ($key == 'radio_four' )
+            {
                 echo xl_layout_label('4.').":";
             }
 
-            if ($key == 'radio_five' ) 
-            { 
+            if ($key == 'radio_five' )
+            {
                 echo xl_layout_label('5.').":";
             }
 
-            if ($key == 'date_report' ) 
-            { 
+            if ($key == 'date_report' )
+            {
                 echo xl_layout_label('Date of Report').":";
             }
 
-            if ($key == 'report_upload' ) 
-            { 
+            if ($key == 'report_upload' )
+            {
                 echo xl_layout_label('Reports Uploaded').":";
             }
 

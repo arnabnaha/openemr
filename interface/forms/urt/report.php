@@ -4,11 +4,13 @@
  */
 
 /* for $GLOBALS[], ?? */
-require_once('../../globals.php');
-/* for acl_check(), ?? */
+require_once(dirname(__FILE__).'/../../globals.php');
 require_once($GLOBALS['srcdir'].'/api.inc');
 /* for generate_display_field() */
 require_once($GLOBALS['srcdir'].'/options.inc.php');
+
+use OpenEMR\Common\Acl\AclMain;
+
 /* The name of the function is significant and must match the folder name */
 function urt_report( $pid, $encounter, $cols, $id) {
     $count = 0;
@@ -18,92 +20,92 @@ $table_name = 'form_urt';
 
 /* an array of all of the fields' names and their types. */
 $field_names = array('inspect_gen' => 'textfield','inspect_lip' => 'textfield','inspect_teeth' => 'textfield','inspect_tongue' => 'textfield','inspect_oral' => 'textfield','inspect_posterior' => 'textfield','inspect_tonsil' => 'textfield','inspect_gum' => 'textfield','inspect_vestibule' => 'textfield','inspect_uvula' => 'textfield','palp_glands' => 'textfield','palp_neck' => 'textfield','palp_extra' => 'textarea');/* in order to use the layout engine's draw functions, we need a fake table of layout data. */
-$manual_layouts = array( 
- 'inspect_gen' => 
+$manual_layouts = array(
+ 'inspect_gen' =>
    array( 'field_id' => 'inspect_gen',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_lip' => 
+ 'inspect_lip' =>
    array( 'field_id' => 'inspect_lip',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_teeth' => 
+ 'inspect_teeth' =>
    array( 'field_id' => 'inspect_teeth',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_tongue' => 
+ 'inspect_tongue' =>
    array( 'field_id' => 'inspect_tongue',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_oral' => 
+ 'inspect_oral' =>
    array( 'field_id' => 'inspect_oral',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_posterior' => 
+ 'inspect_posterior' =>
    array( 'field_id' => 'inspect_posterior',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_tonsil' => 
+ 'inspect_tonsil' =>
    array( 'field_id' => 'inspect_tonsil',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_gum' => 
+ 'inspect_gum' =>
    array( 'field_id' => 'inspect_gum',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_vestibule' => 
+ 'inspect_vestibule' =>
    array( 'field_id' => 'inspect_vestibule',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'inspect_uvula' => 
+ 'inspect_uvula' =>
    array( 'field_id' => 'inspect_uvula',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'palp_glands' => 
+ 'palp_glands' =>
    array( 'field_id' => 'palp_glands',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'palp_neck' => 
+ 'palp_neck' =>
    array( 'field_id' => 'palp_neck',
           'data_type' => '2',
           'fld_length' => '30',
           'max_length' => '255',
           'description' => '',
           'list_id' => '' ),
- 'palp_extra' => 
+ 'palp_extra' =>
    array( 'field_id' => 'palp_extra',
           'data_type' => '3',
           'fld_length' => '10',
@@ -132,7 +134,7 @@ $lists = array();
 
             if ($key == 'id' || $key == 'pid' || $key == 'user' ||
                 $key == 'groupname' || $key == 'authorized' ||
-                $key == 'activity' || $key == 'date' || 
+                $key == 'activity' || $key == 'date' ||
                 $value == '' || $value == '0000-00-00 00:00:00' ||
                 $value == 'n')
             {
@@ -148,75 +150,75 @@ $lists = array();
             /* remove the time-of-day from the 'date' fields. */
             if ($field_names[$key] == 'date')
             if ($value != '') {
-              $dateparts = split(' ', $value);
+              $dateparts = explode(' ', $value);
               $value = $dateparts[0];
             }
 
 	    echo $td_style;
-            
 
-            if ($key == 'inspect_gen' ) 
-            { 
+
+            if ($key == 'inspect_gen' )
+            {
                 echo xl_layout_label('General Look').":";
             }
 
-            if ($key == 'inspect_lip' ) 
-            { 
+            if ($key == 'inspect_lip' )
+            {
                 echo xl_layout_label('Lip').":";
             }
 
-            if ($key == 'inspect_teeth' ) 
-            { 
+            if ($key == 'inspect_teeth' )
+            {
                 echo xl_layout_label('Teeth').":";
             }
 
-            if ($key == 'inspect_tongue' ) 
-            { 
+            if ($key == 'inspect_tongue' )
+            {
                 echo xl_layout_label('Tongue').":";
             }
 
-            if ($key == 'inspect_oral' ) 
-            { 
+            if ($key == 'inspect_oral' )
+            {
                 echo xl_layout_label('Oral Cavity').":";
             }
 
-            if ($key == 'inspect_posterior' ) 
-            { 
+            if ($key == 'inspect_posterior' )
+            {
                 echo xl_layout_label('Posterior Pharynx').":";
             }
 
-            if ($key == 'inspect_tonsil' ) 
-            { 
+            if ($key == 'inspect_tonsil' )
+            {
                 echo xl_layout_label('Tonsil').":";
             }
 
-            if ($key == 'inspect_gum' ) 
-            { 
+            if ($key == 'inspect_gum' )
+            {
                 echo xl_layout_label('Gingiva').":";
             }
 
-            if ($key == 'inspect_vestibule' ) 
-            { 
+            if ($key == 'inspect_vestibule' )
+            {
                 echo xl_layout_label('Vestibule').":";
             }
 
-            if ($key == 'inspect_uvula' ) 
-            { 
+            if ($key == 'inspect_uvula' )
+            {
                 echo xl_layout_label('Uvula').":";
             }
 
-            if ($key == 'palp_glands' ) 
-            { 
+            if ($key == 'palp_glands' )
+            {
                 echo xl_layout_label('Salivary Glands').":";
             }
 
-            if ($key == 'palp_neck' ) 
-            { 
+            if ($key == 'palp_neck' )
+            {
                 echo xl_layout_label('Neck Glands').":";
             }
 
-            if ($key == 'palp_extra' ) 
-            { 
+            if ($key == 'palp_extra' )
+            {
                 echo xl_layout_label('Extra Examination Finding').":";
             }
 
